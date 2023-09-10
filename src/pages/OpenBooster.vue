@@ -1,25 +1,24 @@
 <template>
-  <div>
+  <div class="open-booster-window">
     <ModelSelect
         v-model="selectedSet"
         :options="selectSetOptions"
-        placeholder="Sélectionnez une option"
+        placeholder="Sélectionnez un booster"
+        v-if="!started && !endscreen"
       />
-    <div>
-     <span>Nombre de boosters à ouvrir</span>
      <ModelSelect
         v-model="boostersToOpen"
         :options="selectBoostersToOpen"
-        placeholder="Sélectionnez une option"
+        placeholder="Nombre de boosters à ouvrir"
+        v-if="!started && !endscreen"
       />
-    </div>
-    <button v-if="selectedSet != null && boostersToOpen != null" @click="openBooster">Commencer</button>
-    <button v-if="false">Suivant</button>
-    <div class="booster-display">
+    <button v-if="selectedSet != null && boostersToOpen != null && !started && !endscreen" @click="openBooster">Commencer</button>
+    <div class="booster-display" v-if="started">
       <template v-for="(boosterCard, index) in boosterCards" :key="index">
         <CardSmall :card="boosterCard"/>
       </template>
     </div>
+    <button v-if="!boosterOpening && started" @click="openBooster">Suivant</button>
   </div>
 </template>
 
@@ -35,7 +34,13 @@ export default {
   },
   methods: {
     openBooster(){
+      if (this.boostersCount == this.boostersToOpen) {
+        this.started = false;
+        this.endscreen = true;
+        return;
+      }
       this.started = true;
+      this.boosterOpening = true;
       this.boosterCards = Array(9).fill(null);
       const interval = setInterval(() => {
         const cardsOfSet = getCardsOfSet(this.selectedSet);
@@ -46,14 +51,18 @@ export default {
         console.log("aze", this.boosterCards.findIndex((element) => !element))
         if (this.boosterCards.findIndex((element) => !element) == -1) {
           clearInterval(interval);
-          this.started = false;
+          this.boosterOpening = false;
+          this.boostersContent = [...this.boostersContent, ...this.boosterCards]
+          this.boostersCount++;
         }
-      }, 10);
+      }, 500);
     }
   },
   computed: {
     selectSetOptions(){
-      return sets.map((set)=>({
+      return sets
+      .filter((set)=>set.set_code.includes("LOB"))
+      .map((set)=>({
         value: set.set_code,
         text: set.set_name
       }))
@@ -75,6 +84,8 @@ export default {
     started: false,
     boosterCards: Array(9).fill(null),
     boostersContent: [],
+    boosterOpening: false,
+    boostersCount: 0,
   })
 }
 </script>
@@ -100,9 +111,20 @@ button:hover{
 
 .booster-display{
   display: flex;
+  justify-content: center;
 }
 
 .booster-display > * {
   width: 10%;
 }
+
+.open-booster-window {
+  width: 96vw;
+  height: 80vh;
+}
+
+.open-booster-window > * {
+  margin: 1rem 1rem;
+}
+
 </style>

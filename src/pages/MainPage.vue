@@ -6,6 +6,9 @@
     <button @click="goTo('/card')">
       Cartes
     </button>
+    <button @click="goTo('/deck-editor')">
+      Deck editor
+    </button>
   </div>
 </template>
 
