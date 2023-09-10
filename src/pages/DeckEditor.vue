@@ -1,11 +1,13 @@
 <template>
   <div class="container">
     <div class="description-panel">
-      <CardViewer v-if="selectedCard" :card="selectedCard" />
-      <button @click="addCard">Ajouter une carte</button>
+      <div v-if="selectedCard">
+        <CardViewer v-if="selectedCard" :card="selectedCard" />
+        <button @click="addCard">Ajouter</button>
+        <button @click="removeCard">Retirer</button>
+      </div>
     </div>
     <div class="image-grid">
-      <!-- Affichez la grille d'images (10 colonnes) ici -->
       <div class="image" v-for="card in deckCards" :key="card.id">
         <img
           :src="card.card_images[0].image_url"
@@ -15,7 +17,6 @@
       </div>
     </div>
     <div class="image-container">
-      <!-- Affichez la liste déroulante d'images ici -->
       <div class="card-select" v-for="card in listcards" :key="card.id">
         <CardSmall @click="showDescription(card)" :card="card" />
       </div>
@@ -53,11 +54,18 @@ export default {
     },
     addCard() {
       this.deckCards.push({ ...this.selectedCard });
-      const deckJson = JSON.stringify(this.deckCards);
-      localStorage.setItem("deck", deckJson);
+      localStorage.setItem("deck", JSON.stringify(this.deckCards));
     },
 
-    removeCard() {},
+    removeCard() {
+      const index = this.deckCards.findIndex(
+        (card) => card.id === this.selectedCard.id
+      );
+      if (index !== -1) {
+        this.deckCards.splice(index, 1);
+        localStorage.setItem("deck", JSON.stringify(this.deckCards));
+      }
+    },
   },
 };
 </script>
@@ -75,10 +83,6 @@ export default {
   border-right: 1px solid #000000;
   display: flex;
   flex-direction: column;
-}
-
-button {
-  margin-top: auto;
 }
 
 .image-grid {
