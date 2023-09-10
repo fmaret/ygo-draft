@@ -21,6 +21,7 @@
         <CardSmall @click="showDescription(card)" :card="card" />
       </div>
     </div>
+    <button @click="genererYDK">Générer et Télécharger le .ydk</button>
   </div>
 </template>
 
@@ -42,6 +43,7 @@ export default {
   },
 
   mounted() {
+    //Load deck in localstorage
     const deckJson = localStorage.getItem("deck");
     if (deckJson) {
       this.deckCards = JSON.parse(deckJson);
@@ -60,6 +62,7 @@ export default {
     showDescription(card) {
       this.selectedCard = card;
     },
+
     addCard() {
       this.deckCards.push({ ...this.selectedCard });
       localStorage.setItem("deck", JSON.stringify(this.deckCards));
@@ -73,6 +76,20 @@ export default {
         this.deckCards.splice(index, 1);
         localStorage.setItem("deck", JSON.stringify(this.deckCards));
       }
+    },
+
+    genererYDK() {
+      const deckData = this.deckCards;
+      const contenuYDK = `#created by Steven\n#main\n${deckData
+        .map((card) => `${card.id}`)
+        .join("\n")}\n#extra\n!side`;
+      const blob = new Blob([contenuYDK], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "deck.ydk";
+      a.click();
+      URL.revokeObjectURL(url);
     },
   },
 };
