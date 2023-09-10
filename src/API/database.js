@@ -49,10 +49,8 @@ export function getRandomCardInList(cardsList, rarity) {
   const r = Math.random();
   if (rarity == "Common") {
      if (r <= probCommune) {
-      console.log("coucou")
       return pickRandomCardInListEquiprobe(cardsList, "Common")
      } else {
-      console.log("azeaze")
       return pickRandomCardInListEquiprobe(cardsList, "Short Print")
      }
   } else if (rarity == "Rare") {

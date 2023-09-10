@@ -32,11 +32,46 @@ export default {
   components: {ModelSelect, CardSmall},
   props: {
   },
+  created() {
+    this.initLocalStorage();
+  },
   methods: {
+    addBoosterCardsInBoostersContent() {
+      const formattedBoosterCards = this.boosterCards.map((card) => {
+        return {
+        name: card.name,
+        id: card.id,
+        count:
+          {
+            [card.chosenSet.set_rarity]: 1,
+          }
+      }
+      })
+      formattedBoosterCards.forEach((card)=>{
+        const cardRarity = Object.keys(card.count)[0];
+        const cardIndex = this.boostersContent.findIndex((c)=>{
+          return card.id == c.id && Object.keys(c.count).includes(cardRarity);
+        })
+        if (cardIndex != -1) {
+          this.boostersContent[cardIndex].count[cardRarity] += 1;
+        } else {
+          this.boostersContent.push(card);
+        }
+    })
+    },
+    initLocalStorage() {
+      try {
+          if (typeof JSON.parse(localStorage.cards) != typeof []) localStorage.cards = '[]';
+        } catch {
+          localStorage.cards = '[]';
+        }
+    },
     openBooster(){
       if (this.boostersCount == this.boostersToOpen) {
         this.started = false;
         this.endscreen = true;
+        this.initLocalStorage();
+        localStorage.cards = JSON.stringify([...(localStorage.cards ? JSON.parse(localStorage.cards) : []) ,...this.boostersContent]);
         return;
       }
       this.started = true;
@@ -47,15 +82,14 @@ export default {
         let index = this.boosterCards.findIndex((element) => !element);
         let rarity = index == 4 ? "Rare" : "Common";
         const card = getRandomCardInList(cardsOfSet, rarity);
-        this.boosterCards[index] = card; 
-        console.log("aze", this.boosterCards.findIndex((element) => !element))
+        this.boosterCards[index] = card;
         if (this.boosterCards.findIndex((element) => !element) == -1) {
           clearInterval(interval);
           this.boosterOpening = false;
-          this.boostersContent = [...this.boostersContent, ...this.boosterCards]
+          this.addBoosterCardsInBoostersContent();
           this.boostersCount++;
         }
-      }, 500);
+      }, 50);
     }
   },
   computed: {
