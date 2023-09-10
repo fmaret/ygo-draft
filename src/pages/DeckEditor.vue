@@ -22,7 +22,6 @@
     </div>
   </div>
 </template>
-  
 
 <script>
 import { get100Cards } from "@/API/database";
@@ -40,15 +39,25 @@ export default {
       selectedCard: null,
     };
   },
+
+  mounted() {
+    const deckJson = localStorage.getItem("deck");
+    if (deckJson) {
+      this.deckCards = JSON.parse(deckJson);
+    }
+  },
+
   methods: {
     showDescription(card) {
       this.selectedCard = card;
     },
     addCard() {
       this.deckCards.push({ ...this.selectedCard });
-      console.log(this.deckCards);
-      console.log(this.listcards);
+      const deckJson = JSON.stringify(this.deckCards);
+      localStorage.setItem("deck", deckJson);
     },
+
+    removeCard() {},
   },
 };
 </script>
@@ -104,7 +113,7 @@ button {
   padding: 20px;
 }
 
-.card-select > *{
+.card-select > * {
   width: 25%;
 }
 
