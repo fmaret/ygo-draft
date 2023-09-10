@@ -3,7 +3,7 @@
     <div class="card-image">
       <img v-if="card" :src="card.card_images[0].image_url" alt="Card Image" />
       <img v-else src="./../../public/img/versoygo.jpg" />
-      <span>{{card.chosenSet?.set_rarity}}</span>
+      <span>{{card?.chosenSet?.set_rarity}}</span>
     </div>
   </div>
 </template>
