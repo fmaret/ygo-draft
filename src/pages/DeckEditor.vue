@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { get100Cards } from "@/API/database";
+import { getCardById } from "@/API/database";
 import CardViewer from "@/components/CardViewer";
 import CardSmall from "@/components/CardSmall";
 export default {
@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      listcards: get100Cards(),
+      listcards: [],
       deckCards: [],
       selectedCard: null,
     };
@@ -45,6 +45,14 @@ export default {
     const deckJson = localStorage.getItem("deck");
     if (deckJson) {
       this.deckCards = JSON.parse(deckJson);
+    }
+
+    //Load cards draw in localstorage
+    const cardsJson = localStorage.getItem("cards");
+    if (cardsJson) {
+      JSON.parse(cardsJson).forEach((card) =>
+        this.listcards.push(getCardById(card.id))
+      );
     }
   },
 
