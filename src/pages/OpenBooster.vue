@@ -95,7 +95,7 @@ export default {
   computed: {
     selectSetOptions(){
       return sets
-      .filter((set)=>set.set_code.includes("LOB"))
+      //.filter((set)=>set.set_code.includes("LOB"))
       .map((set)=>({
         value: set.set_code,
         text: set.set_name
