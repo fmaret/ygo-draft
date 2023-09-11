@@ -7,14 +7,14 @@ const routes = [
     component: () => import('@/pages/MainPage.vue')
   },
   {
-    path: '/card',
-    name: 'CardViewer',
-    component: () => import('@/components/CardViewer.vue')
-  },
-  {
     path: '/deck-editor',
     name: 'DeckEditor',
     component: () => import('@/pages/DeckEditor.vue')
+  },
+  {
+    path: '/cards',
+    name: 'CardsPage',
+    component: () => import('@/pages/CardsPage.vue')
   },
   {
     path: '/booster',

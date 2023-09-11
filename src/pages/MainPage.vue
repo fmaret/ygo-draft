@@ -3,7 +3,7 @@
     <button @click="goTo('/booster')">
       Ouvrir un booster
     </button>
-    <button @click="goTo('/card')">
+    <button @click="goTo('/cards')">
       Cartes
     </button>
     <button @click="goTo('/deck-editor')">
