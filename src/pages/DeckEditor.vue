@@ -37,7 +37,9 @@ export default {
   data() {
     return {
       listcards: [],
-      deckCards: [],
+      deckCards: [], //Between 40-60 cards (Max 3exemplaires)
+      extraDeckCards: [], //Between 0-15 cards (XYZ, Synchro, Fusion)
+      sideDeckCards: [], //Between 0-15 cards (To change cards in your Deck after the match)
       selectedCard: null,
     };
   },
@@ -64,6 +66,14 @@ export default {
     },
 
     addCard() {
+      const selectedCardCount = this.deckCards.filter(
+        (card) => card.id === this.selectedCard.id
+      ).length;
+
+      if (selectedCardCount >= 3) {
+        return alert("Pas plus de 3 exemplaires par cartes");
+      }
+
       this.deckCards.push({ ...this.selectedCard });
       localStorage.setItem("deck", JSON.stringify(this.deckCards));
     },
@@ -79,6 +89,12 @@ export default {
     },
 
     genererYDK() {
+      if (this.deckCards.length < 40) {
+        return alert("Il vous faut au moins 40 cartes !");
+      }
+      if (this.deckCards.length > 60) {
+        return alert("Il vous faut au plus 60 cartes !");
+      }
       const deckData = this.deckCards;
       const contenuYDK = `#created by Steven\n#main\n${deckData
         .map((card) => `${card.id}`)
