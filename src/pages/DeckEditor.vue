@@ -4,18 +4,17 @@
       <div class="left-column">
         <div v-if="selectedCard">
           <CardViewer v-if="selectedCard" :card="selectedCard" />
-          <button @click="addCard">Ajouter</button>
-          <button @click="removeCard">Retirer</button>
         </div>
       </div>
       <div class="middle-column">
         <div class="first-row">
           <div class="image-grid">
             <div class="image" v-for="card in deckCards" :key="card.id">
-              <img
-                :src="card.card_images[0].image_url"
-                alt="Image"
-                @click="showDescription(card)"
+              <CardSmall
+                @mouseenter="showDescription(card)"
+                @click.left="addCard(card)"
+                @contextmenu.prevent="removeCard(card)"
+                :card="card"
               />
             </div>
           </div>
@@ -23,10 +22,11 @@
         <div class="second-row">
           <div class="image-grid">
             <div class="image" v-for="card in extraDeckCards" :key="card.id">
-              <img
-                :src="card.card_images[0].image_url"
-                alt="Image"
-                @click="showDescription(card)"
+              <CardSmall
+                @mouseenter="showDescription(card)"
+                @click.left="addCard(card)"
+                @contextmenu.prevent="removeCard(card)"
+                :card="card"
               />
             </div>
           </div>
@@ -34,10 +34,11 @@
         <div class="third-row">
           <div class="image-grid">
             <div class="image" v-for="card in sideDeckCards" :key="card.id">
-              <img
-                :src="card.card_images[0].image_url"
-                alt="Image"
-                @click="showDescription(card)"
+              <CardSmall
+                @mouseenter="showDescription(card)"
+                @click.left="addCard(card)"
+                @contextmenu.prevent="removeCard(card)"
+                :card="card"
               />
             </div>
           </div>
@@ -46,7 +47,12 @@
       <div class="right-column image-list">
         <div class="image-grid-2">
           <div class="image" v-for="card in listcards" :key="card.id">
-            <CardSmall @click="showDescription(card)" :card="card" />
+            <CardSmall
+              @mouseenter="showDescription(card)"
+              @click.left="addCard(card)"
+              @contextmenu.prevent="removeCard(card)"
+              :card="card"
+            />
           </div>
         </div>
       </div>
@@ -102,28 +108,28 @@ export default {
       this.selectedCard = card;
     },
 
-    addCard() {
+    addCard(cardSelected) {
       const selectedCardCount = this.deckCards.filter(
-        (card) => card.id === this.selectedCard.id
+        (card) => card.id === cardSelected.id
       ).length;
 
       if (selectedCardCount >= 3) {
         return alert("Pas plus de 3 exemplaires par cartes");
       }
 
-      if (this.typeExtraDeck.includes(this.selectedCard.frameType)) {
-        this.extraDeckCards.push({ ...this.selectedCard });
+      if (this.typeExtraDeck.includes(cardSelected.frameType)) {
+        this.extraDeckCards.push({ ...cardSelected });
         localStorage.setItem("ExtraDeck", JSON.stringify(this.extraDeckCards));
       } else {
-        this.deckCards.push({ ...this.selectedCard });
+        this.deckCards.push({ ...cardSelected });
         localStorage.setItem("deck", JSON.stringify(this.deckCards));
       }
     },
 
-    removeCard() {
-      if (this.typeExtraDeck.includes(this.selectedCard.frameType)) {
+    removeCard(cardSelected) {
+      if (this.typeExtraDeck.includes(cardSelected.frameType)) {
         const index = this.extraDeckCards.findIndex(
-          (card) => card.id === this.selectedCard.id
+          (card) => card.id === cardSelected.id
         );
         if (index !== -1) {
           this.extraDeckCards.splice(index, 1);
@@ -134,7 +140,7 @@ export default {
         }
       } else {
         const index = this.deckCards.findIndex(
-          (card) => card.id === this.selectedCard.id
+          (card) => card.id === cardSelected.id
         );
         if (index !== -1) {
           this.deckCards.splice(index, 1);
@@ -221,7 +227,7 @@ export default {
   padding: 0;
   margin: 0;
   overflow-y: auto;
-  max-height: 85vh;
+  max-height: 92vh;
 }
 
 .image-grid-2 {
