@@ -9,6 +9,9 @@
     <button @click="goTo('/deck-editor')">
       Deck editor
     </button>
+    <button @click="goTo('/draft')">
+      Draft
+    </button>
   </div>
 </template>
 

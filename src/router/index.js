@@ -21,6 +21,11 @@ const routes = [
     name: 'OpenBooster',
     component: () => import('@/pages/OpenBooster.vue')
   },
+  {
+    path: '/draft',
+    name: 'DraftPage',
+    component: () => import('@/pages/DraftPage.vue')
+  },
 ];
 
 export default createRouter({
