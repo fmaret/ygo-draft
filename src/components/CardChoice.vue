@@ -12,7 +12,7 @@
 
 
 <script>
-import {getRandomCard} from "@/API/database";
+import {getCardsOfSet, getRandomCardInList} from "@/API/database";
 import CardSmall from "@/components/CardSmall.vue";
 import CardViewer from "@/components/CardViewer.vue";
 
@@ -24,17 +24,29 @@ export default {
     selectedCard: null,
     deck: [],
   }),
+  props: {
+    sets: [],
+  },
   created() {
-    this.cards = Array(3).fill(null).map(()=> getRandomCard());
+    this.generateChoice();
   },
   methods: {
+    generateChoice() {
+      let allCards = [];
+      this.sets.forEach((set)=> {
+        console.log("aze", set.value)
+        allCards = [...allCards, ...getCardsOfSet(set.value)];
+      }) 
+      console.log("all", allCards)
+      this.cards = Array(3).fill(null).map(()=> getRandomCardInList(allCards, "Rare"));
+    },
     selectCard(card){
       if (card!=this.selectedCard) this.selectedCard = card;
       else return;
     },
     chooseCard(card){
       this.deck.push(card);
-      this.cards = Array(3).fill(null).map(()=> getRandomCard());
+      this.generateChoice();
     }
   }
 };
