@@ -1,7 +1,7 @@
 <template>
   <div class="card-choice">
     <div class="single-card-choice" v-for="card in cards" :key="card" >
-      <CardSmall :card="card" @click="selectCard(card)"/>
+      <CardSmall class="card-small" :card="card" @click="selectCard(card)"/>
       <button @click="chooseCard(card)">Choisir</button>
     </div>
   </div>
@@ -26,6 +26,7 @@ export default {
   }),
   props: {
     sets: [],
+    width: {value: 100, required: false},
   },
   created() {
     this.generateChoice();
@@ -45,7 +46,11 @@ export default {
       else return;
     },
     chooseCard(card){
-      this.deck.push(card);
+      const index = this.deck.findIndex(c=>c.id == card.id);
+      if (index == -1) this.deck.push({...card, count: 1});
+      else this.deck[index].count += 1;
+      this.$emit("deckUpdated", this.deck);
+      console.log("coucou", this.deck)
       this.generateChoice();
     }
   }
@@ -68,4 +73,5 @@ export default {
   background-color: black;
   height: 100vh;
 }
+
 </style>

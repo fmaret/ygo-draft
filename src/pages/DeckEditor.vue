@@ -158,7 +158,7 @@ export default {
       }
       const deckData = this.deckCards;
       const ExtraDeckData = this.extraDeckCards;
-      const contenuYDK = `#created by Steven\n#main\n${deckData
+      const contenuYDK = `#created by Steven et Florent\n#main\n${deckData
         .map((card) => `${card.id}`)
         .join("\n")}\n#extra\n${ExtraDeckData.map((card) => `${card.id}`).join(
         "\n"
