@@ -4,6 +4,7 @@
       <img v-if="card" :src="card.card_images[0].image_url" alt="Card Image" />
       <img v-else src="./../../public/img/versoygo.jpg" />
       <span>{{card?.chosenSet?.set_rarity}}</span>
+      <div class="bubble" v-if="count"><span class="count">{{count}}</span></div>
     </div>
   </div>
 </template>
@@ -13,6 +14,7 @@
 export default {
   props: {
     card: {},
+    count: {}
   },
 };
 </script>
@@ -42,12 +44,20 @@ img {
   margin-bottom: 10px;
 }
 
-.card-type,
-.card-archetype,
-.card-attribute,
-.card-level,
-.card-atk-def,
-.card-description {
-  margin-bottom: 5px;
+.bubble {
+  position: absolute;
+  background-color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  font-family:'Lucida Sans Unicode';
+  color: black;
+  z-index: 1;
+  bottom: 10px;
+  right: 10px;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 }
 </style>

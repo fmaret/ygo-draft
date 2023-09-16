@@ -12,7 +12,6 @@
             <div class="image" v-for="card in deckCards" :key="card.id">
               <CardSmall
                 @mouseenter="showDescription(card)"
-                @click.left="addCard(card)"
                 @contextmenu.prevent="removeCard(card)"
                 :card="card"
               />
@@ -24,7 +23,6 @@
             <div class="image" v-for="card in extraDeckCards" :key="card.id">
               <CardSmall
                 @mouseenter="showDescription(card)"
-                @click.left="addCard(card)"
                 @contextmenu.prevent="removeCard(card)"
                 :card="card"
               />
@@ -36,7 +34,6 @@
             <div class="image" v-for="card in sideDeckCards" :key="card.id">
               <CardSmall
                 @mouseenter="showDescription(card)"
-                @click.left="addCard(card)"
                 @contextmenu.prevent="removeCard(card)"
                 :card="card"
               />
@@ -50,8 +47,8 @@
             <CardSmall
               @mouseenter="showDescription(card)"
               @click.left="addCard(card)"
-              @contextmenu.prevent="removeCard(card)"
               :card="card"
+              :count="getNumberOfCardById(card.id)"
             />
           </div>
         </div>
@@ -104,6 +101,12 @@ export default {
   },
 
   methods: {
+    getNumberOfCardById(id) {
+      const cardsJson = JSON.parse(localStorage.getItem("cards") ? localStorage.getItem("cards") : []);
+      const card = cardsJson.find((card) => card.id == id);
+      if (!card.count) return 0;
+      return Object.keys(card.count).reduce((a, b) => a+card.count[b], 0)
+    },
     showDescription(card) {
       this.selectedCard = card;
     },
@@ -112,7 +115,7 @@ export default {
       const selectedCardCount = this.deckCards.filter(
         (card) => card.id === cardSelected.id
       ).length;
-
+      if (this.getNumberOfCardById(cardSelected.id) <= selectedCardCount) return;
       if (selectedCardCount >= 3) {
         return alert("Pas plus de 3 exemplaires par cartes");
       }
