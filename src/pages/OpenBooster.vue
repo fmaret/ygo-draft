@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import {sets, getCardsOfSet, getRandomCardInList} from './../API/database';
+import {sets, getCardsOfSet, getRandomCardInList, setsNames} from './../API/database';
 import "vue-search-select/dist/VueSearchSelect.css"
 import { ModelSelect } from 'vue-search-select'
 import CardSmall from './../components/CardSmall.vue';
@@ -98,11 +98,13 @@ export default {
   },
   computed: {
     selectSetOptions(){
+      console.log(sets)
       return sets
-      //.filter((set)=>set.set_code.includes("LOB"))
+      .filter((set)=>Object.keys(setsNames).includes(set.set_code))
+      .sort((a, b) => a.tcg_date.slice(0, 4) - b.tcg_date.slice(0, 4))
       .map((set)=>({
         value: set.set_code,
-        text: set.set_name
+        text: setsNames[set.set_code]
       }))
     },
     selectBoostersToOpen(){
