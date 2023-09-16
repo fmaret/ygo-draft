@@ -42,8 +42,25 @@
         </div>
       </div>
       <div class="right-column image-list">
+        <div class="filter-bar">
+          <input
+            type="text"
+            v-model="nameFilter"
+            placeholder="Filtrer par nom"
+          />
+          <select v-model="frameTypeFilter">
+            <option value="">Tous les types de cadre</option>
+            <option
+              v-for="(label, type) in typeFrame"
+              :key="type"
+              :value="type"
+            >
+              {{ label }}
+            </option>
+          </select>
+        </div>
         <div class="image-grid-2">
-          <div class="image" v-for="card in listcards" :key="card.id">
+          <div class="image" v-for="card in filteredCards" :key="card.id">
             <CardSmall
               @mouseenter="showDescription(card)"
               @click.left="addCard(card)"
@@ -75,6 +92,9 @@ export default {
       sideDeckCards: [], //Between 0-15 cards (To change cards in your Deck after the match)
       selectedCard: null,
 
+      nameFilter: "",
+      frameTypeFilter: "",
+
       typeExtraDeck: ["xyz", "fusion", "link", "synchro"], //frametype extra deck card
 
       typeOrder: [
@@ -96,6 +116,26 @@ export default {
         "token",
         "skill",
       ],
+
+      typeFrame: {
+        normal: "Normal",
+        effect: "Effet",
+        ritual: "Rituel",
+        fusion: "Fusion",
+        synchro: "Synchro",
+        xyz: "XYZ",
+        link: "Lien",
+        normal_pendulum: " Normal Pendule",
+        effect_pendulum: "Effet Pendule",
+        ritual_pendulum: "Rituel Pendule",
+        fusion_pendulum: "Fusion Pendule",
+        synchro_pendulum: "Synchro Pendule",
+        xyz_pendulum: "XYZ Pendule",
+        spell: "Magie",
+        trap: "Piège",
+        token: "Jeton",
+        skill: "Compétence",
+      },
     };
   },
 
@@ -118,6 +158,7 @@ export default {
         this.listcards.push(getCardById(card.id))
       );
       this.listcards = this.listcards.sort(this.customCardSort);
+      console.log(this.listcards);
     }
   },
 
@@ -130,6 +171,7 @@ export default {
       if (!card.count) return 0;
       return Object.keys(card.count).reduce((a, b) => a + card.count[b], 0);
     },
+
     showDescription(card) {
       this.selectedCard = card;
     },
@@ -212,13 +254,27 @@ export default {
       const typeB = b.frameType.toLowerCase();
 
       if (this.typeOrder.indexOf(typeA) === -1) {
-        return 1; // Mettre les types inconnus à la fin
+        return 1;
       }
       if (this.typeOrder.indexOf(typeB) === -1) {
-        return -1; // Mettre les types inconnus à la fin
+        return -1;
       }
 
       return this.typeOrder.indexOf(typeA) - this.typeOrder.indexOf(typeB);
+    },
+  },
+
+  computed: {
+    filteredCards() {
+      return this.listcards.filter((card) => {
+        const nameMatch = card.name
+          .toLowerCase()
+          .includes(this.nameFilter.toLowerCase());
+        const frameTypeMatch =
+          this.frameTypeFilter === "" ||
+          card.frameType === this.frameTypeFilter;
+        return nameMatch && frameTypeMatch;
+      });
     },
   },
 };
