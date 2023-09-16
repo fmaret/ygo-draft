@@ -76,6 +76,26 @@ export default {
       selectedCard: null,
 
       typeExtraDeck: ["xyz", "fusion", "link", "synchro"], //frametype extra deck card
+
+      typeOrder: [
+        "normal",
+        "effect",
+        "ritual",
+        "fusion",
+        "synchro",
+        "xyz",
+        "link",
+        "normal_pendulum",
+        "effect_pendulum",
+        "ritual_pendulum",
+        "fusion_pendulum",
+        "synchro_pendulum",
+        "xyz_pendulum",
+        "spell",
+        "trap",
+        "token",
+        "skill",
+      ],
     };
   },
 
@@ -97,6 +117,7 @@ export default {
       JSON.parse(cardsJson).forEach((card) =>
         this.listcards.push(getCardById(card.id))
       );
+      this.listcards = this.listcards.sort(this.customCardSort);
     }
   },
 
@@ -184,6 +205,20 @@ export default {
       a.download = "deck.ydk";
       a.click();
       URL.revokeObjectURL(url);
+    },
+
+    customCardSort(a, b) {
+      const typeA = a.frameType.toLowerCase();
+      const typeB = b.frameType.toLowerCase();
+
+      if (this.typeOrder.indexOf(typeA) === -1) {
+        return 1; // Mettre les types inconnus à la fin
+      }
+      if (this.typeOrder.indexOf(typeB) === -1) {
+        return -1; // Mettre les types inconnus à la fin
+      }
+
+      return this.typeOrder.indexOf(typeA) - this.typeOrder.indexOf(typeB);
     },
   },
 };
