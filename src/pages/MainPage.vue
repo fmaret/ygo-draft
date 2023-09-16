@@ -12,6 +12,10 @@
     <button @click="goTo('/draft')">
       Draft
     </button>
+    <input type="file" @change="importLocalStorage" />
+    <button @click="exportLocalStorage()">
+      Export
+    </button>
   </div>
 </template>
 
@@ -20,9 +24,40 @@ export default {
   name: 'MainPage',
   props: {
   },
+  data: () => ({
+    localStorageJson: null,
+  }),
   methods: {
     goTo(route){
       this.$router.push(route)
+    },
+    importLocalStorage(event) {
+      const file = event.target.files[0];
+      const lecteur = new FileReader();
+      lecteur.onload = (event) => {
+        this.localStorageJson = JSON.parse(event.target.result);
+      };
+      lecteur.readAsText(file);
+      setTimeout(()=>{
+        localStorage.ExtraDeck = JSON.stringify(this.localStorageJson.extraDeck);
+        localStorage.deck = JSON.stringify(this.localStorageJson.deck);
+        localStorage.cards = JSON.stringify(this.localStorageJson.cards);
+      }, 1000)
+      
+      
+    },
+    exportLocalStorage() {
+      const extraDeck = localStorage.ExtraDeck;
+      const cards = localStorage.cards;
+      const deck = localStorage.deck;
+      const localStorageJson = {extraDeck: JSON.parse(extraDeck), cards: JSON.parse(cards), deck: JSON.parse(deck)};
+      const blob = new Blob([JSON.stringify(localStorageJson)], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ygo-draft-export.ydk";
+      a.click();
+      URL.revokeObjectURL(url);
     }
   }
 }
