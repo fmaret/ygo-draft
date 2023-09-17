@@ -1,11 +1,7 @@
 <template>
   <div class="card-container">
-    <div class="card-image">
-      <img
-        :src="card.card_images[0].image_url"
-        alt="Card Image"
-        class="small-image"
-      />
+    <div class="card-image" :style="{'width': `20vw`, 'height': `${20*1.45}vw`}">
+      <CardSmall :card="card"/>
     </div>
     <div class="card-details">
       <div class="card-title">
@@ -47,90 +43,19 @@
 </template>
 
 <script>
+
+import {races, attributes, types} from '@/API/database';
+import CardSmall from '@/components/CardSmall.vue';
 export default {
+  data : () => ({
+    races: races,
+    attributes: attributes,
+    types: types
+  }),
+  components: {CardSmall},
   props: {
     card: {},
-  },
-  data() {
-    return {
-      races: {
-        Aqua: "Aqua",
-        Beast: "Bête",
-        "Beast-Warrior": "Bête-Guerrier",
-        "Creator-God": "Dieu Créateur",
-        Cyberse: "Cyberse",
-        Dinosaur: "Dinosaure",
-        "Divine-Beast": "Bête Divine",
-        Dragon: "Dragon",
-        Fairy: "Féerie",
-        Fiend: "Démon",
-        Fish: "Poisson",
-        Insect: "Insecte",
-        Machine: "Machine",
-        Plant: "Plante",
-        Psychic: "Psychique",
-        Pyro: "Pyro",
-        Reptile: "Reptile",
-        Rock: "Rocher",
-        "Sea Serpent": "Serpent de Mer",
-        Spellcaster: "Magicien",
-        Thunder: "Tonnerre",
-        Warrior: "Guerrier",
-        "Winged Beast": "Bête Ailée",
-        Wyrm: "Wyrm",
-        Zombie: "Zombie",
-        Normal: "Normal",
-        Field: "Terrain",
-        Equip: "Équipement",
-        Continuous: "Continu",
-        "Quick-Play": "Jeu Rapide",
-        Ritual: "Rituel",
-        Counter: "Contre",
-      },
-
-      attributes: {
-        DARK: "TÉNÈBRES",
-        EARTH: "TERRE",
-        FIRE: "FEU",
-        LIGHT: "LUMIÈRE",
-        WATER: "EAU",
-        WIND: "VENT",
-        DIVINE: "DIVIN",
-      },
-
-      types: {
-        "Effect Monster": "Effet",
-        "Flip Effect Monster": "Effet / Flip",
-        "Flip Tuner Effect Monster": "Effet / Flip / Syntoniseur",
-        "Gemini Monster": "Gemini",
-        "Normal Monster": "Normal",
-        "Normal Tuner Monster": "Normal / Syntoniseur",
-        "Pendulum Effect Monster": "Pendule / Effet",
-        "Pendulum Effect Ritual Monster": "Pendule / Effet / Rituel",
-        "Pendulum Flip Effect Monster": "Pendule / Effet / Flip",
-        "Pendulum Normal Monster": "Pendule / Normal",
-        "Pendulum Tuner Effect Monster": "Pendule / Syntoniseur / Effet",
-        "Ritual Effect Monster": "Rituel / Effet",
-        "Ritual Monster": "Rituel",
-        "Spell Card": "Magie",
-        "Spirit Monster": "Esprit",
-        "Toon Monster": "Toon",
-        "Trap Card": "Piège",
-        "Tuner Monster": "Syntoniseur",
-        "Union Effect Monster": "Union / Effet",
-        "Fusion Monster": "Fusion",
-        "Link Monster": "Lien",
-        "Pendulum Effect Fusion Monster": "Pendule / Effet / Fusion",
-        "Synchro Monster": "Synchro",
-        "Synchro Pendulum Effect Monster": "Synchro / Pendule / Effet",
-        "Synchro Tuner Monster": "Synchro / Syntoniseur",
-        "XYZ Monster": "XYZ",
-        "XYZ Pendulum Effect Monster": "XYZ / Pendule / Effet",
-        "Skill Card": "Compétence",
-        Token: "Jeton",
-      },
-    };
-  },
+  }
 };
 </script>
 
