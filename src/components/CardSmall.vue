@@ -20,6 +20,10 @@
           ATK /{{formatStat(card.atk)}} DEF /{{formatStat(card.def)}}
         </div>
       </div>
+      <div v-else>
+        <div class="card-stats">
+        </div>
+      </div>
     </div>
   </div>
   <div v-else>
@@ -202,9 +206,10 @@ export default {
   line-height: 80%;
   width: 100%;
   height: 100%;
-  margin-bottom: 10%;
+  margin-bottom: 0%;
   margin-top: 5%;
   overflow-y: scroll;
+  
 }
 .card-description-inside::-webkit-scrollbar {
   display: none;
