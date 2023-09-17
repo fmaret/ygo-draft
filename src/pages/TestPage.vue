@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex;">
-  <div :style="{'width': `20vw`, 'height': `${20*88/61}vw`}">
+  <div :style="{'width': `50vw`, 'height': `${50*88/61}vw`}">
     <CardSmall :card="card" />
   </div>
   <div :style="{'width': `10vw`, 'height': `${10*88/61}vw`}">

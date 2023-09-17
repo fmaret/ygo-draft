@@ -15,14 +15,20 @@
     <button v-if="selectedSet != null && boostersToOpen != null && !started && !endscreen" @click="openBooster">Commencer</button>
     <div class="booster-display" v-if="started">
       <template v-for="(boosterCard, index) in boosterCards" :key="index">
-        <div :style="{'width': `10vw`, 'height': `${10*88/61}vw`}">
-          <CardSmall :card="boosterCard"/>
+        <div :style="{'width': `10vw`, 'height': `${10*1.45}vw`}">
+          <CardSmall :card="boosterCard"
+          @mouseover="previewCard(boosterCard)"
+          @mouseleave="previewCard(null)"
+          />
         </div>
       </template>
     </div>
     <button v-if="!boosterOpening && started" @click="openBooster">Suivant</button>
     <button v-if="!started" @click="clearLocalStorage">Clear Local Storage</button>
   </div>
+  <div v-if="previewedCard" class="preview-card" :style="{'width': `20vw`, 'height': `${20*1.45}vw`}">
+    <CardSmall :card="previewedCard"/>
+  </div>  
 </template>
 
 <script>
@@ -39,6 +45,9 @@ export default {
     this.initLocalStorage();
   },
   methods: {
+    previewCard(card) {
+      this.previewedCard = card;
+    },
     clearLocalStorage() {
       localStorage.clear();
     },
@@ -95,7 +104,7 @@ export default {
           this.addBoosterCardsInBoostersContent();
           this.boostersCount++;
         }
-      }, 50);
+      }, 500);
     }
   },
   computed: {
@@ -128,6 +137,7 @@ export default {
     boostersContent: [],
     boosterOpening: false,
     boostersCount: 0,
+    previewedCard: null,
   })
 }
 </script>
@@ -146,6 +156,7 @@ button {
   display: inline-block;
   font-size: 16px;
 }
+
 
 button:hover{
   cursor: pointer;
@@ -167,6 +178,11 @@ button:hover{
 
 .open-booster-window > * {
   margin: 1rem 1rem;
+}
+.preview-card {
+  position: absolute;
+  left:38%;
+  top: 30%;
 }
 
 </style>
