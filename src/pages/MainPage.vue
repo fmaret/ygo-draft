@@ -16,6 +16,9 @@
     <button @click="exportLocalStorage()">
       Export
     </button>
+    <button @click="goTo('/test')">
+      Test
+    </button>
   </div>
 </template>
 

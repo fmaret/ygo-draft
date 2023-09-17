@@ -26,6 +26,11 @@ const routes = [
     name: 'DraftPage',
     component: () => import('@/pages/DraftPage.vue')
   },
+  {
+    path: '/test',
+    name: 'TestPage',
+    component: () => import('@/pages/TestPage.vue')
+  },
 ];
 
 export default createRouter({

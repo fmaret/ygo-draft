@@ -15,7 +15,9 @@
     <button v-if="selectedSet != null && boostersToOpen != null && !started && !endscreen" @click="openBooster">Commencer</button>
     <div class="booster-display" v-if="started">
       <template v-for="(boosterCard, index) in boosterCards" :key="index">
-        <CardSmall :card="boosterCard"/>
+        <div :style="{'width': `10vw`, 'height': `${10*88/61}vw`}">
+          <CardSmall :card="boosterCard"/>
+        </div>
       </template>
     </div>
     <button v-if="!boosterOpening && started" @click="openBooster">Suivant</button>
@@ -155,7 +157,7 @@ button:hover{
 }
 
 .booster-display > * {
-  width: 10%;
+  /* width: 10%; */
 }
 
 .open-booster-window {
