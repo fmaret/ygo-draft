@@ -9,7 +9,7 @@
       <div class="middle-column">
         <div class="first-row">
           <div class="image-grid">
-            <div class="image" v-for="card in deckCards" :key="card.id">
+            <div class="image" v-for="card in deckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -20,7 +20,7 @@
         </div>
         <div class="second-row">
           <div class="image-grid">
-            <div class="image" v-for="card in extraDeckCards" :key="card.id">
+            <div class="image" v-for="card in extraDeckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -31,7 +31,7 @@
         </div>
         <div class="third-row">
           <div class="image-grid">
-            <div class="image" v-for="card in sideDeckCards" :key="card.id">
+            <div class="image" v-for="card in sideDeckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -60,7 +60,7 @@
           </select>
         </div>
         <div class="image-grid-2">
-          <div class="image" v-for="card in filteredCards" :key="card.id">
+          <div class="image" v-for="card in filteredCards" :key="card.id" :style="{'width': `10vw`, 'height': `${10*1.45}vw`}">
             <CardSmall
               @mouseenter="showDescription(card)"
               @click.left="addCard(card)"
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { getCardById } from "@/API/database";
+import { getCardById, typeFrame } from "@/API/database";
 import CardViewer from "@/components/CardViewer";
 import CardSmall from "@/components/CardSmall";
 export default {
@@ -117,25 +117,7 @@ export default {
         "skill",
       ],
 
-      typeFrame: {
-        normal: "Normal",
-        effect: "Effet",
-        ritual: "Rituel",
-        fusion: "Fusion",
-        synchro: "Synchro",
-        xyz: "XYZ",
-        link: "Lien",
-        normal_pendulum: " Normal Pendule",
-        effect_pendulum: "Effet Pendule",
-        ritual_pendulum: "Rituel Pendule",
-        fusion_pendulum: "Fusion Pendule",
-        synchro_pendulum: "Synchro Pendule",
-        xyz_pendulum: "XYZ Pendule",
-        spell: "Magie",
-        trap: "Piège",
-        token: "Jeton",
-        skill: "Compétence",
-      },
+      typeFrame: typeFrame
     };
   },
 
@@ -319,7 +301,6 @@ export default {
   position: relative;
   cursor: pointer;
   overflow: hidden;
-  border-radius: 5px;
 }
 
 .image img {

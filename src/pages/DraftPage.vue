@@ -100,6 +100,6 @@ export default {
 
 <style>
 .draft-page > .card-choice {
-  width: 40%;
+  width: 60%;
 }
 </style>
