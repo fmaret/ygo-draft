@@ -102,6 +102,10 @@ export default {
 .deck-preview::-webkit-scrollbar {
   display: none;
 }
+.deck-preview {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 li {
     background-color: lightblue;
     padding: 0.2rem;

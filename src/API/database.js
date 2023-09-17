@@ -42,11 +42,11 @@ export function getCardById(id) {
 export function getCardsOfSet(setCode) {
   return cards
     .filter((card) => {
-      return card.card_sets?.some((set) => set.set_code.includes(setCode));
+      return card.card_sets?.some((set) => set.set_code == setCode);
     })
     .map((card) => ({
       ...card,
-      chosenSet: card.card_sets.find((set) => set.set_code.includes(setCode)),
+      chosenSet: card.card_sets.find((set) => set.set_code == setCode),
     }));
 }
 
