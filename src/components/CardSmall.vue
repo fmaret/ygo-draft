@@ -1,7 +1,10 @@
 <template>
   <div ref="cardBody" v-if="card" :class="getCardBodyClass(card)"
       >
-    <span ref ="cardTitle" :class="getCardTitleClass(card)" :key="updateKey">{{card.name}}</span>
+    <div class="card-title-and-attribute">
+      <span ref ="cardTitle" :class="getCardTitleClass(card)" :key="updateKey">{{card.name}}</span>
+      <img class="attribute-img" :src="getCardAttributeImage(card)"/>
+    </div>
     <span class="card-stars">
       <img class="card-star" v-for="i in card.level" :key="i" src="../../public/img/ygo-star.png"/>
     </span>
@@ -61,13 +64,18 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener("resize", this.changeTitleFontSize);
+    window.addEventListener("resize", this.initCardVisual);
     this.initCardVisual();
   },
   methods: {
+    getCardAttributeImage(card) {
+      if (card.frameType == "spell") return `/img/attributes/spell.png`
+      else if (card.frameType == "trap") return `/img/attributes/trap.png`
+      return `/img/attributes/${card.attribute.toLowerCase()}.png`
+    },
     formatStat(stat){
-      if (!stat) return;
-      return " ".repeat(4-stat.toString().length)+stat.toString().substring(0,4)
+      if (stat == null) return;
+      return " ".repeat(8-2*stat.toString().length)+stat.toString().substring(0,4)
     },
     getCardTitleClass(card) {
       return {
@@ -146,17 +154,24 @@ export default {
   padding-left: 12%;
   padding-top: 2.8%;
 }
-.card-title {
-  
+.card-title-and-attribute {
+  display: flex;
+  padding: 7.15% 0 0 8.5% ;
   font-family: 'MatrixRegularSmallCaps1';
   text-align: start;
   width: 100%;
-  padding: 7.15% 0 0 8.5% ;
   font-weight: 550;
   color: black;
   letter-spacing: -0.095vw;
-  width: 100%;
   height: 7%;
+}
+.attribute-img {
+  width: 8%;
+  height: 80%;
+}
+.card-title {
+  width: 76%;
+  
 }
 .rarity-common {
   color: rgb(0, 0, 0);
@@ -178,6 +193,7 @@ export default {
 .card-description-text {
 
 }
+
 .card-description-text-normal-monster {
   font-style: italic;
   font-weight: 500;
@@ -215,13 +231,14 @@ export default {
   display: none;
 }
 .card-stats {
+  white-space: pre;
   border-top: 1px solid black;
   padding-top: 1px;
   margin: 0 1%;
   color: black;
   margin-bottom: 10%;
   font-family: 'MatrixBoldSmallCaps';
-  padding-left: 60%;
+  padding-left: 58%;
 }
 
 

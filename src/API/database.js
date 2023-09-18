@@ -148,6 +148,7 @@ export function getCardsOfSet(setCode) {
 
 export function getRandomCard() {
   const randomIndex = Math.floor(Math.random() * cards.length);
+  console.log("a", cards[randomIndex])
   return cards[randomIndex];
 }
 

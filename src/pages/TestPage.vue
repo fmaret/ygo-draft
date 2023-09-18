@@ -4,7 +4,7 @@
     <CardSmall :card="card" />
   </div>
   <div :style="{'width': `10vw`, 'height': `${10*88/61}vw`}">
-    <CardSmall :card="card" />
+    <!-- <CardSmall :card="card" /> -->
   </div>
   </div>
 </template>
