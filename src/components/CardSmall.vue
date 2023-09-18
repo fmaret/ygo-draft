@@ -9,17 +9,19 @@
       <img class="card-star" v-for="i in card.level" :key="i" src="../../public/img/ygo-star.png"/>
     </span>
     <img class="img-cropped" :src="card.card_images[0].image_url_cropped"/>
+    <div class="card-reference">
+    </div>
     <div ref ="cardDescription" class="card-description">
-      <div class="card-description-inside">
-        <span>
-          <span>[{{ races[card.race] }}</span>
+      <div ref="cardDescriptionInside" class="card-description-inside">
+        <span v-if="card.type.includes('Monster')" class="card-race">
+          <span>[ {{ races[card.race] }}</span>
           <span v-if="types[card.type] != 'Normal'"> / {{ types[card.type] }}</span>
-          <span>]</span>
+          <span> ]</span>
         </span>
         <span :class="{'card-description-text': true, 'card-description-text-normal-monster': types[card.type] == 'Normal'}">{{card.desc}}</span>
       </div>
       <div v-if="card.type.includes('Monster')">
-        <div class="card-stats">
+        <div class="card-stats card-stats-monster">
           ATK /{{formatStat(card.atk)}} DEF /{{formatStat(card.def)}}
         </div>
       </div>
@@ -28,10 +30,12 @@
         </div>
       </div>
     </div>
+    <span v-if="count" class="bubble">{{count}}</span>
   </div>
   <div v-else>
     <img src="./../../public/img/versoygo.jpg" />
   </div>  
+  
   
 </template>
 
@@ -99,9 +103,15 @@ export default {
 
     },
     changeDescriptionFontSize() {
+      if (!this.card) return;
       const size = 9.8;
+      const descriptionBoxSize =  this.card.type.includes("Monster") ? 66 : 75;
       const width20vw = 240;
-      if (this.$refs.cardDescription) this.$refs.cardDescription.style.fontSize = this.$refs.cardDescription.offsetWidth * size / width20vw + "px";
+      if (this.$refs.cardDescription) {
+        this.$refs.cardDescription.style.fontSize = this.$refs.cardDescription.offsetWidth * size / width20vw + "px";
+        this.$refs.cardDescriptionInside.style.height = this.$refs.cardDescriptionInside.offsetWidth * descriptionBoxSize / width20vw + "px";
+      }
+      
     },
     getCardBodyClass(card) {
       return {
@@ -135,6 +145,18 @@ export default {
 @font-face {
   font-family: 'MatrixRegularSmallCaps2';
   src: url('../../public/fonts/MatrixRegularSmallCaps2.ttf');
+}
+@font-face {
+  font-family: 'Stone Serif Semibold';
+  src: url('../../public/fonts/Stone Serif Semibold.ttf');
+}
+@font-face {
+  font-family: 'Stone Serif LT Italic';
+  src: url('../../public/fonts/Stone Serif LT Italic.ttf');
+}
+@font-face {
+  font-family: 'Stone Serif Small Caps Bold';
+  src: url('../../public/fonts/Stone Serif Small Caps Bold.ttf');
 }
 
 .card-star {
@@ -190,13 +212,21 @@ export default {
                         2px -2px 2px #ff9900,
                       -2px -2px 2px #ff9900;
 }
-.card-description-text {
-
+.card-reference {
+  height: 4.5%;
 }
-
+.card-description-text {
+  height: 10%;
+  padding-top: 1.2%;
+}
+.card-race {
+  font-family: 'Stone Serif Small Caps Bold';
+  letter-spacing: -0.8px;
+  font-weight: 2000;
+  
+}
 .card-description-text-normal-monster {
-  font-style: italic;
-  font-weight: 500;
+  font-family: 'Stone Serif LT Italic';
 }
 .card-description {
   color: black;
@@ -208,12 +238,10 @@ export default {
   width: 85%;
   text-align: start;
   display: flex;
-  padding-top: 3%;
   padding-right: 0;
   flex-direction: column;
   flex-grow: 1;
   overflow: hidden;
-
 }
 .card-description-inside {
   
@@ -221,24 +249,22 @@ export default {
   flex-direction: column;
   line-height: 80%;
   width: 100%;
-  height: 100%;
   margin-bottom: 0%;
-  margin-top: 5%;
   overflow-y: scroll;
-  
 }
 .card-description-inside::-webkit-scrollbar {
   display: none;
 }
 .card-stats {
   white-space: pre;
-  border-top: 1px solid black;
   padding-top: 1px;
   margin: 0 1%;
   color: black;
-  margin-bottom: 10%;
   font-family: 'MatrixBoldSmallCaps';
   padding-left: 58%;
+}
+.card-stats-monster {
+  border-top: 1px solid black;
 }
 
 
@@ -301,10 +327,11 @@ img {
 
 .bubble {
   position: absolute;
+  border: 1px solid black;
   background-color: white;
   font-weight: bold;
   border-radius: 50%;
-  font-family:'Lucida Sans Unicode';
+  font-family:'MatrixBook';
   color: black;
   z-index: 1;
   bottom: 10px;
