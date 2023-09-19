@@ -152,15 +152,15 @@ export function getRandomCard() {
   return cards[randomIndex];
 }
 
-function pickRandomCardInListEquiprobe(cardsList, rarity) {
+function pickRandomCardInListEquiprobe(cardsList, rarity, idsToExclude = []) {
   const cardsListByRarity = cardsList.filter(
     (card) => card.chosenSet.set_rarity == rarity
-  );
+  ).filter((card)=>!idsToExclude.includes(card.id));
   const randomIndex = Math.floor(Math.random() * cardsListByRarity.length);
   return cardsListByRarity[randomIndex];
 }
 
-export function getRandomCardInList(cardsList, rarity, betterRarities = false) {
+export function getRandomCardInList(cardsList, rarity, betterRarities = false, idsToExclude = []) {
   // Probabilités de rarities
   const probCommune = 29 / 30;
   const probSecretRare = 1 / 23;
@@ -172,15 +172,15 @@ export function getRandomCardInList(cardsList, rarity, betterRarities = false) {
 
   function pickCommonCard() {
     if (r <= probCommune) {
-      return pickRandomCardInListEquiprobe(cardsList, "Common");
+      return pickRandomCardInListEquiprobe(cardsList, "Common", idsToExclude);
     } else {
-      return pickRandomCardInListEquiprobe(cardsList, "Short Print");
+      return pickRandomCardInListEquiprobe(cardsList, "Short Print", idsToExclude);
     }
   }
 
   if (!betterRarities) {
     if (rarity == "Common") return pickCommonCard();
-    return pickRandomCardInListEquiprobe(cardsList, rarity);
+    return pickRandomCardInListEquiprobe(cardsList, rarity, idsToExclude);
   } 
 
   // betterRarities only works for common cards (for 6th card)
@@ -188,11 +188,11 @@ export function getRandomCardInList(cardsList, rarity, betterRarities = false) {
   if (r <= probCommune6th) {
     return pickCommonCard();
   } else if (r <= probCommune6th + probSuperRare) {
-    return pickRandomCardInListEquiprobe(cardsList, "Super Rare");
+    return pickRandomCardInListEquiprobe(cardsList, "Super Rare", idsToExclude);
   } else if (r <= probCommune6th + probSuperRare + probUltraRare) {
-    return pickRandomCardInListEquiprobe(cardsList, "Ultra Rare");
+    return pickRandomCardInListEquiprobe(cardsList, "Ultra Rare", idsToExclude);
   } else {
-    return pickRandomCardInListEquiprobe(cardsList, "Secret Rare");
+    return pickRandomCardInListEquiprobe(cardsList, "Secret Rare", idsToExclude);
   }
 }
 

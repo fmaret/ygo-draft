@@ -96,7 +96,8 @@ export default {
         const cardsOfSet = getCardsOfSet(this.selectedSet);
         let index = this.boosterCards.findIndex((element) => !element);
         let rarity = index == 4 ? "Rare" : "Common";
-        const card = getRandomCardInList(cardsOfSet, rarity, index == 5);
+        const idsToExclude = this.boosterCards.map((card)=>card?.id);
+        const card = getRandomCardInList(cardsOfSet, rarity, index == 5, idsToExclude);
         this.boosterCards[index] = card;
         if (this.boosterCards.findIndex((element) => !element) == -1) {
           clearInterval(interval);
