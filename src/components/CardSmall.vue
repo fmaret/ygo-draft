@@ -8,7 +8,7 @@
     <span class="card-stars">
       <img class="card-star" v-for="i in card.level" :key="i" src="../../public/img/ygo-star.png"/>
     </span>
-    <img class="img-cropped" :src="card.card_images[0].image_url_cropped"/>
+    <img :class="{'img-cropped': true, 'img-shining': isShining}" :src="card.card_images[0].image_url_cropped"/>
     <div class="card-reference">
     </div>
     <div ref ="cardDescription" class="card-description">
@@ -71,6 +71,11 @@ export default {
     window.addEventListener("resize", this.initCardVisual);
     this.initCardVisual();
   },
+  computed: {
+    isShining() {
+      return ["Super Rare", "Ultra Rare", "Secret Rare"].includes(this.card?.chosenSet?.set_rarity);
+    }
+  },
   methods: {
     getCardAttributeImage(card) {
       if (card.frameType == "spell") return `/img/attributes/spell.png`
@@ -84,9 +89,8 @@ export default {
     getCardTitleClass(card) {
       return {
         'card-title': true,
-        'rarity-common': ["Common", "Short Print"].includes(card?.chosenSet?.set_rarity),
-        'rarity-rare': card?.chosenSet?.set_rarity == "Rare",
-        'rarity-super': ["Super Rare", "Ultra Rare", "Secret Rare"].includes(card?.chosenSet?.set_rarity),
+        'text-white': ["Rare", "Ultra Rare", "Secret Rare"].includes(card?.chosenSet?.set_rarity),
+        'text-black': ["Common", "Short Print", "Super Rare"].includes(card?.chosenSet?.set_rarity),
         }
     },
     initCardVisual() {
@@ -176,6 +180,34 @@ export default {
   padding-left: 12%;
   padding-top: 2.8%;
 }
+@keyframes shiningLoop {
+  0%, 100% {
+    -webkit-mask-position: 0;
+    mask-position: 0;
+  }
+  100% {
+    -webkit-mask-position: 120%;
+    mask-position: 120%;
+  }
+}
+
+.img-shining {
+    -webkit-mask-image: linear-gradient(45deg,#000 25%,rgba(0,0,0,.2) 50%,#000 75%);
+    mask-image: linear-gradient(45deg,#000 25%,rgba(0,0,0,.2) 50%,#000 75%);
+    -webkit-mask-size: 800%;
+    mask-size: 800%;
+    -webkit-mask-position: 0;
+    mask-position: 0;
+    animation: shiningLoop 3s infinite; /* 2s pour aller, 2s pour revenir = 4s au total */
+}
+
+
+
+
+
+
+
+
 .card-title-and-attribute {
   display: flex;
   padding: 7.15% 0 0 8.5% ;
@@ -195,22 +227,12 @@ export default {
   width: 76%;
   
 }
-.rarity-common {
-  color: rgb(0, 0, 0);
-}
-.rarity-rare {
+.text-white {
   color: white;
-  text-shadow: -2px 2px 2px #000000,
-                        2px 2px 2px #000000,
-                        2px -2px 2px #000000,
-                      -2px -2px 2px #000000;
+  filter: brightness(10);
 }
-.rarity-super {
-  color: white;
-  text-shadow: -2px 2px 2px #ff9900,
-                        2px 2px 2px #ff9900,
-                        2px -2px 2px #ff9900,
-                      -2px -2px 2px #ff9900;
+.text-black {
+  color: black;
 }
 .card-reference {
   height: 4.5%;
