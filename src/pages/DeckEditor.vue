@@ -9,7 +9,12 @@
       <div class="middle-column">
         <div class="first-row">
           <div class="image-grid">
-            <div class="image" v-for="card in deckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
+            <div
+              class="image"
+              v-for="card in deckCards"
+              :key="card.id"
+              :style="{ width: `4vw`, height: `${4 * 1.45}vw` }"
+            >
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -20,7 +25,12 @@
         </div>
         <div class="second-row">
           <div class="image-grid">
-            <div class="image" v-for="card in extraDeckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
+            <div
+              class="image"
+              v-for="card in extraDeckCards"
+              :key="card.id"
+              :style="{ width: `4vw`, height: `${4 * 1.45}vw` }"
+            >
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -31,7 +41,12 @@
         </div>
         <div class="third-row">
           <div class="image-grid">
-            <div class="image" v-for="card in sideDeckCards" :key="card.id" :style="{'width': `4vw`, 'height': `${4*1.45}vw`}">
+            <div
+              class="image"
+              v-for="card in sideDeckCards"
+              :key="card.id"
+              :style="{ width: `4vw`, height: `${4 * 1.45}vw` }"
+            >
               <CardSmall
                 @mouseenter="showDescription(card)"
                 @contextmenu.prevent="removeCard(card)"
@@ -60,7 +75,12 @@
           </select>
         </div>
         <div class="image-grid-2">
-          <div class="image" v-for="card in filteredCards" :key="card.id" :style="{'width': `10vw`, 'height': `${10*1.45}vw`}">
+          <div
+            class="image"
+            v-for="card in filteredCards"
+            :key="card.id"
+            :style="{ width: `10vw`, height: `${10 * 1.45}vw` }"
+          >
             <CardSmall
               @mouseenter="showDescription(card)"
               @click.left="addCard(card)"
@@ -71,7 +91,8 @@
         </div>
       </div>
     </div>
-    <button @click="genererYDK">Générer et Télécharger le .ydk</button>
+    <button @click="downloadYDK">Télécharger YDK</button>
+    <button @click="copyToClipboardYDK">Presse-papier YDK</button>
   </div>
 </template>
 
@@ -117,7 +138,7 @@ export default {
         "skill",
       ],
 
-      typeFrame: typeFrame
+      typeFrame: typeFrame,
     };
   },
 
@@ -208,20 +229,14 @@ export default {
       }
     },
 
-    genererYDK() {
+    downloadYDK() {
       if (this.deckCards.length < 40) {
         return alert("Il vous faut au moins 40 cartes !");
       }
       if (this.deckCards.length > 60) {
         return alert("Il vous faut au plus 60 cartes !");
       }
-      const deckData = this.deckCards;
-      const ExtraDeckData = this.extraDeckCards;
-      const contenuYDK = `#created by Steven et Florent\n#main\n${deckData
-        .map((card) => `${card.id}`)
-        .join("\n")}\n#extra\n${ExtraDeckData.map((card) => `${card.id}`).join(
-        "\n"
-      )}\n!side`;
+      const contenuYDK = this.genereYDK();
       const blob = new Blob([contenuYDK], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -229,6 +244,26 @@ export default {
       a.download = "deck.ydk";
       a.click();
       URL.revokeObjectURL(url);
+    },
+
+    copyToClipboardYDK() {
+      if (this.deckCards.length < 40) {
+        return alert("Il vous faut au moins 40 cartes !");
+      }
+      if (this.deckCards.length > 60) {
+        return alert("Il vous faut au plus 60 cartes !");
+      }
+      navigator.clipboard.writeText(this.genereYDK());
+    },
+
+    genereYDK() {
+      const deckData = this.deckCards;
+      const ExtraDeckData = this.extraDeckCards;
+      return `#created by Steven et Florent\n#main\n${deckData
+        .map((card) => `${card.id}`)
+        .join("\n")}\n#extra\n${ExtraDeckData.map((card) => `${card.id}`).join(
+        "\n"
+      )}\n!side`;
     },
 
     customCardSort(a, b) {
