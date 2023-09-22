@@ -93,6 +93,15 @@
     </div>
     <button @click="downloadYDK">Télécharger YDK</button>
     <button @click="copyToClipboardYDK">Presse-papier YDK</button>
+    <button
+      @click="
+        this.drawCards();
+        showDraw = true;
+      "
+    >
+      Voir main
+    </button>
+    <DrawPreview :cards="draw" v-if="showDraw" @close="showDraw = false" />
   </div>
 </template>
 
@@ -100,10 +109,13 @@
 import { getCardById, typeFrame } from "@/API/database";
 import CardViewer from "@/components/CardViewer";
 import CardSmall from "@/components/CardSmall";
+import DrawPreview from "@/components/DrawPreview.vue";
+
 export default {
   components: {
     CardViewer,
     CardSmall,
+    DrawPreview,
   },
   data() {
     return {
@@ -139,6 +151,9 @@ export default {
       ],
 
       typeFrame: typeFrame,
+
+      showDraw: false,
+      draw: [],
     };
   },
 
@@ -161,11 +176,20 @@ export default {
         this.listcards.push(getCardById(card.id))
       );
       this.listcards = this.listcards.sort(this.customCardSort);
-      console.log(this.listcards);
     }
   },
 
   methods: {
+    drawCards() {
+      this.draw = [];
+      let deck = [...this.deckCards];
+      for (let i = 0; i < 5; i++) {
+        const index = Math.floor(Math.random() * deck.length);
+        const carteTiree = deck.splice(index, 1)[0];
+        this.draw.push(carteTiree);
+      }
+    },
+
     getNumberOfCardById(id) {
       const cardsJson = JSON.parse(
         localStorage.getItem("cards") ? localStorage.getItem("cards") : []
