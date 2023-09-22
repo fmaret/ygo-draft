@@ -5,19 +5,37 @@
     </div>
 
     <div class="main-menu">
-      <button class="custom-button" @click="goTo('/booster')">
+      <button v-if="!options" class="custom-button" @click="goTo('/booster')">
         Ouvrir un booster
       </button>
-      <button class="custom-button" @click="goTo('/cards')">Cartes</button>
-      <button class="custom-button" @click="goTo('/deck-editor')">
+      <button v-if="!options" class="custom-button" @click="goTo('/cards')">
+        Cartes
+      </button>
+      <button
+        v-if="!options"
+        class="custom-button"
+        @click="goTo('/deck-editor')"
+      >
         Deck editor
       </button>
-      <button class="custom-button" @click="goTo('/draft')">Draft</button>
-      <input type="file" @change="importLocalStorage" />
-      <button class="custom-button" @click="exportLocalStorage()">
+      <button v-if="!options" class="custom-button" @click="goTo('/draft')">
+        Draft
+      </button>
+      <input v-if="options" type="file" @change="importLocalStorage" />
+      <button
+        v-if="options"
+        class="custom-button"
+        @click="exportLocalStorage()"
+      >
         Export
       </button>
-      <button class="custom-button" @click="goTo('/test')">Test</button>
+      <button v-if="options" class="custom-button" @click="goTo('/test')">
+        Test
+      </button>
+    </div>
+
+    <div class="options-menu">
+      <button class="options-button" @click="options = !options"></button>
     </div>
   </div>
 </template>
@@ -29,6 +47,7 @@ export default {
   data: () => ({
     localStorageJson: null,
     menu: [{ route: "/booster", title: "OpenDeck" }],
+    options: false,
   }),
   methods: {
     goTo(route) {
@@ -101,6 +120,13 @@ export default {
   justify-content: start;
 }
 
+.options-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  justify-content: end;
+}
+
 .custom-button {
   background: url("@/assets/Button_Normal.png") no-repeat center center;
   background-size: contain;
@@ -111,6 +137,17 @@ export default {
   text-align: center;
   font-size: 22px;
   font-family: "MatrixRegularSmallCaps1";
+  width: 18rem;
+  margin: 2px;
+}
+
+.options-button {
+  background: url("@/assets/Button_Normal_mini.png") no-repeat center center;
+  background-size: contain;
+  color: white;
+  padding: 20px;
+  border: none;
+  cursor: pointer;
   width: 18rem;
   margin: 2px;
 }
