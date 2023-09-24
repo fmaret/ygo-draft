@@ -29,6 +29,11 @@
       >
         Export
       </button>
+
+      <button v-if="options" class="custom-button" @click="clearLocalStorage()">
+        Clear Local Storage
+      </button>
+
       <button v-if="options" class="custom-button" @click="goTo('/test')">
         Test
       </button>
@@ -86,6 +91,9 @@ export default {
       a.download = "ygo-draft-export.ydk";
       a.click();
       URL.revokeObjectURL(url);
+    },
+    clearLocalStorage() {
+      localStorage.clear();
     },
   },
 };
