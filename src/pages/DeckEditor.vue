@@ -56,7 +56,7 @@
           </div>
         </div>
       </div>
-      <div class="right-column image-list">
+      <div class="right-column">
         <div class="filter-bar">
           <input
             type="text"
@@ -74,12 +74,12 @@
             </option>
           </select>
         </div>
-        <div class="image-grid-2">
+        <div class="image-grid-4 image-list">
           <div
             class="image"
             v-for="card in filteredCards"
             :key="card.id"
-            :style="{ width: `10vw`, height: `${10 * 1.45}vw` }"
+            :style="{ width: `5vw`, height: `${5 * 1.45}vw` }"
           >
             <CardSmall
               @mouseenter="showDescription(card)"
@@ -353,7 +353,14 @@ export default {
       return this.listcards.filter((card) => {
         const nameMatch = card.name
           .toLowerCase()
-          .includes(this.nameFilter.toLowerCase());
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .includes(
+            this.nameFilter
+              .toLowerCase()
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+          );
         const frameTypeMatch =
           this.frameTypeFilter === "" ||
           card.frameType === this.frameTypeFilter;
@@ -418,12 +425,12 @@ export default {
   padding: 0;
   margin: 0;
   overflow-y: auto;
-  max-height: 92vh;
+  max-height: 90vh;
 }
 
-.image-grid-2 {
+.image-grid-4 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
   padding: 20px;
 }
