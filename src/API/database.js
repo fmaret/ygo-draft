@@ -1,5 +1,6 @@
 export const cards = require("./database/dbCards.json").data;
-export const sets = require("./database/dbSets.json");
+export const sets = require("./database/dbSets.json");  
+export const prebuiltDecks = require("./database/prebuiltDecks.json");
 
 export const setsNames = {
   LOB: "La Légende du Dragon Blanc aux Yeux Bleus",
@@ -197,6 +198,10 @@ export function getRandomCardInList(
 
   // betterRarities only works for common cards (for 6th card)
 
+  console.log("seuil commune", probCommune6th)
+  console.log("seuil super", probCommune6th + probSuperRare)
+  console.log("seuil ultra", probCommune6th + probSuperRare + probUltraRare)
+  console.log("r", r)
   if (r <= probCommune6th) {
     return pickCommonCard();
   } else if (r <= probCommune6th + probSuperRare) {

@@ -21,6 +21,9 @@
       <button v-if="!options" class="custom-button" @click="goTo('/draft')">
         Draft
       </button>
+      <button v-if="!options" class="custom-button" @click="goTo('/prebuilt-decks')">
+        Decks préconstruits
+      </button>
       <input v-if="options" type="file" @change="importLocalStorage" />
       <button
         v-if="options"

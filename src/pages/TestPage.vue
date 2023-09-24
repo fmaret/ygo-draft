@@ -11,7 +11,7 @@
 
 <script>
 import CardSmall from '@/components/CardSmall.vue';
-import {getRandomCard} from '@/API/database';
+import {getCardById} from '@/API/database';
 import "vue-search-select/dist/VueSearchSelect.css"
 
 export default {
@@ -21,7 +21,7 @@ export default {
   },
   computed: {
     card(){
-      return getRandomCard();
+      return getCardById(43228023);
     }
   }
 }
