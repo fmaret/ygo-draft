@@ -1,33 +1,32 @@
 export const cards = require("./database/dbCards.json").data;
 export const sets = require("./database/dbSets.json");
 
-
 export const setsNames = {
-  "LOB": "La Légende du Dragon Blanc aux Yeux Bleus",
-  "MRD": "Métal Raiders",
-  "SRL": "Le Maitre des Magies",
-  "PGD": "Serviteur du Pharaon",
-  "LON": "Labyrinthe des Cauchemars",
-  "LOD": "La Crise des Ténèbres",
-  "IOC": "Invasion des Ténèbres",
-  "AST": "Sanctuaire Ancestral",
-  "SOD": "L'Âme du Duelliste",
-  "RDS": "Avènement du Destin",
-  "FET": "Eternité Brûlante",
-  "DR1": "Sombre Révélation Volume 1",
-  "TLM": "Le Millénaire Perdu",
-  "DB2": "Genèse Ténébreuse 2",
-  "CRV": "Révolution Cybernétique",
-  "DR2": "Sombre Révélation Volume 2",
-  "EEN": "Energie Elémentaire",
-  "SOI": "L'Ombre de l'Infini",
-  "EOJ": "Ennemi du Bien",
-  "POTD": "Puissance du Duelliste",
-  "CDIP": "L'Impact des Cyberténèbres",
-  "DR3": "Sombre Révélation Volume 3",
-  "STON": "L'Attaque de Néos",
-  "FOTB": "Force du Destructeur",
-}
+  LOB: "La Légende du Dragon Blanc aux Yeux Bleus",
+  MRD: "Métal Raiders",
+  SRL: "Le Maitre des Magies",
+  PGD: "Serviteur du Pharaon",
+  LON: "Labyrinthe des Cauchemars",
+  LOD: "La Crise des Ténèbres",
+  IOC: "Invasion des Ténèbres",
+  AST: "Sanctuaire Ancestral",
+  SOD: "L'Âme du Duelliste",
+  RDS: "Avènement du Destin",
+  FET: "Eternité Brûlante",
+  DR1: "Sombre Révélation Volume 1",
+  TLM: "Le Millénaire Perdu",
+  DB2: "Genèse Ténébreuse 2",
+  CRV: "Révolution Cybernétique",
+  DR2: "Sombre Révélation Volume 2",
+  EEN: "Energie Elémentaire",
+  SOI: "L'Ombre de l'Infini",
+  EOJ: "Ennemi du Bien",
+  POTD: "Puissance du Duelliste",
+  CDIP: "L'Impact des Cyberténèbres",
+  DR3: "Sombre Révélation Volume 3",
+  STON: "L'Attaque de Néos",
+  FOTB: "Force du Destructeur",
+};
 
 export const races = {
   Aqua: "Aqua",
@@ -62,7 +61,7 @@ export const races = {
   "Quick-Play": "Jeu Rapide",
   Ritual: "Rituel",
   Counter: "Contre",
-}
+};
 
 export const attributes = {
   DARK: "TÉNÈBRES",
@@ -72,7 +71,7 @@ export const attributes = {
   WATER: "EAU",
   WIND: "VENT",
   DIVINE: "DIVIN",
-}
+};
 
 export const types = {
   "Effect Monster": "Effet",
@@ -104,7 +103,7 @@ export const types = {
   "XYZ Pendulum Effect Monster": "XYZ / Pendule / Effet",
   "Skill Card": "Compétence",
   Token: "Jeton",
-}
+};
 
 export const typeFrame = {
   normal: "Normal",
@@ -124,7 +123,7 @@ export const typeFrame = {
   trap: "Piège",
   token: "Jeton",
   skill: "Compétence",
-}
+};
 
 //CARDS
 export function getAllCards() {
@@ -138,29 +137,38 @@ export function getCardById(id) {
 export function getCardsOfSet(setCode) {
   return cards
     .filter((card) => {
-      return card.card_sets?.some((set) => set.set_code.split("-")[0] == setCode);
+      return card.card_sets?.some(
+        (set) => set.set_code.split("-")[0] == setCode
+      );
     })
     .map((card) => ({
       ...card,
-      chosenSet: card.card_sets.find((set) => set.set_code.split("-")[0] == setCode),
+      chosenSet: card.card_sets.find(
+        (set) => set.set_code.split("-")[0] == setCode
+      ),
     }));
 }
 
 export function getRandomCard() {
   const randomIndex = Math.floor(Math.random() * cards.length);
-  console.log("a", cards[randomIndex])
+  console.log("a", cards[randomIndex]);
   return cards[randomIndex];
 }
 
 function pickRandomCardInListEquiprobe(cardsList, rarity, idsToExclude = []) {
-  const cardsListByRarity = cardsList.filter(
-    (card) => card.chosenSet.set_rarity == rarity
-  ).filter((card)=>!idsToExclude.includes(card.id));
+  const cardsListByRarity = cardsList
+    .filter((card) => card.chosenSet.set_rarity == rarity)
+    .filter((card) => !idsToExclude.includes(card.id));
   const randomIndex = Math.floor(Math.random() * cardsListByRarity.length);
   return cardsListByRarity[randomIndex];
 }
 
-export function getRandomCardInList(cardsList, rarity, betterRarities = false, idsToExclude = []) {
+export function getRandomCardInList(
+  cardsList,
+  rarity,
+  betterRarities = false,
+  idsToExclude = []
+) {
   // Probabilités de rarities
   const probCommune = 29 / 30;
   const probSecretRare = 1 / 23;
@@ -174,14 +182,18 @@ export function getRandomCardInList(cardsList, rarity, betterRarities = false, i
     if (r <= probCommune) {
       return pickRandomCardInListEquiprobe(cardsList, "Common", idsToExclude);
     } else {
-      return pickRandomCardInListEquiprobe(cardsList, "Short Print", idsToExclude);
+      return pickRandomCardInListEquiprobe(
+        cardsList,
+        "Short Print",
+        idsToExclude
+      );
     }
   }
 
   if (!betterRarities) {
     if (rarity == "Common") return pickCommonCard();
     return pickRandomCardInListEquiprobe(cardsList, rarity, idsToExclude);
-  } 
+  }
 
   // betterRarities only works for common cards (for 6th card)
 
@@ -192,13 +204,28 @@ export function getRandomCardInList(cardsList, rarity, betterRarities = false, i
   } else if (r <= probCommune6th + probSuperRare + probUltraRare) {
     return pickRandomCardInListEquiprobe(cardsList, "Ultra Rare", idsToExclude);
   } else {
-    return pickRandomCardInListEquiprobe(cardsList, "Secret Rare", idsToExclude);
+    return pickRandomCardInListEquiprobe(
+      cardsList,
+      "Secret Rare",
+      idsToExclude
+    );
   }
 }
 
 //SETS
 export function getAllSets() {
-  return sets;
+  const setMap = new Map();
+  sets.forEach((objet) => {
+    const { set_code, num_of_cards } = objet;
+    if (
+      !setMap.has(set_code) ||
+      num_of_cards < setMap.get(set_code).num_of_cards
+    ) {
+      setMap.set(set_code, objet);
+    }
+  });
+
+  return Array.from(setMap.values());
 }
 
 export function getSetById(id) {
