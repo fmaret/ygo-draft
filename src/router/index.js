@@ -31,6 +31,11 @@ const routes = [
     name: 'TestPage',
     component: () => import('@/pages/TestPage.vue')
   },
+  {
+    path: '/prebuilt-decks',
+    name: 'PrebuiltDecks',
+    component: () => import('@/pages/PrebuiltDecks.vue')
+  },
 ];
 
 export default createRouter({

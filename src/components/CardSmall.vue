@@ -2,7 +2,11 @@
   <div ref="cardBody" v-if="card" :class="getCardBodyClass(card)"
       >
     <div class="card-title-and-attribute">
-      <span ref ="cardTitle" :class="getCardTitleClass(card)" :key="updateKey">{{card.name}}</span>
+      <span ref ="cardTitle" :class="getCardTitleClass(card)" :key="updateKey">
+        <span ref="cardTitleTextOnly" class="card-title-text-only">
+          {{card.name}}
+        </span>
+      </span>
       <img class="attribute-img" :src="getCardAttributeImage(card)"/>
     </div>
     <span class="card-stars">
@@ -89,7 +93,7 @@ export default {
     getCardTitleClass(card) {
       return {
         'card-title': true,
-        'text-white': ["Rare", "Ultra Rare", "Secret Rare"].includes(card?.chosenSet?.set_rarity),
+        'text-white': card.frameType == 'xyz' || ["Rare", "Ultra Rare", "Secret Rare"].includes(card?.chosenSet?.set_rarity),
         'text-black': ["Common", "Short Print", "Super Rare"].includes(card?.chosenSet?.set_rarity),
         }
     },
@@ -101,9 +105,19 @@ export default {
       const size = 20;
       const defaultLetterSpacing = -1;
       const width20vw = 240;
-      if (!this.$refs.cardBody) return;
+      if (!this.$refs.cardBody || !this.card) return;
       this.$refs.cardTitle.style.fontSize = this.$refs.cardBody.offsetWidth * size / width20vw + "px";
       this.$refs.cardTitle.style.letterSpacing = this.$refs.cardBody.offsetWidth * defaultLetterSpacing / width20vw + "px";
+      if (!this.$refs.cardTitleTextOnly) return;
+      console.log(this.$refs.cardTitleTextOnly.style.transform)
+      const lettersRef = 40;
+      const marginLeftRef = 40;
+      const nbOfLetters = this.card.name.length;
+      const scaleRef = 0.8;
+      const lettersNoScale = 32;
+      if (lettersNoScale >= nbOfLetters) return;
+      this.$refs.cardTitleTextOnly.style.transform  = `scale(${nbOfLetters * scaleRef / lettersRef}, 1)`;
+      this.$refs.cardTitleTextOnly.style.marginLeft = `-${nbOfLetters * marginLeftRef / lettersRef * (this.$refs.cardBody.offsetWidth * size / width20vw) / lettersRef }px`;
 
     },
     changeDescriptionFontSize() {
@@ -125,7 +139,10 @@ export default {
         'spell-card': card.frameType == "spell",
         'trap-card': card.frameType == "trap",
         'fusion-card': card.frameType == "fusion",
-        'pendulum-card': card.frameType == "effect_pendulum"
+        'pendulum-card': card.frameType == "effect_pendulum",
+        'synchro-monster-card': card.frameType == "synchro",
+        'xyz-monster-card': card.frameType == "xyz",
+        'link-monster-card': card.frameType == "link"
     }
   }
   }
@@ -225,8 +242,14 @@ export default {
 }
 .card-title {
   width: 76%;
-  
+  display: flex;
+  justify-content: start;
 }
+.card-title-text-only {
+  display:inline-block;
+  white-space: nowrap;
+}
+
 .text-white {
   color: white;
   filter: brightness(10);
@@ -323,6 +346,15 @@ export default {
 }
 .pendulum-card {
   background-image: url('../../public/img/pendulum-card.png');
+}
+.synchro-monster-card {
+  background-image: url('../../public/img/synchro-card.png');
+}
+.xyz-monster-card {
+  background-image: url('../../public/img/xyz-card.png');
+}
+.link-monster-card {
+  background-image: url('../../public/img/link-card.png');
 }
 
 

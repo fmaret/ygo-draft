@@ -105,7 +105,7 @@ export default {
           this.addBoosterCardsInBoostersContent();
           this.boostersCount++;
         }
-      }, 500);
+      }, 50);
     }
   },
   computed: {
