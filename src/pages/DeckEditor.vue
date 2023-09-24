@@ -239,21 +239,21 @@ export default {
     },
 
     addSideCard(cardSelected) {
-      if (this.typeExtraDeck.includes(cardSelected.frameType)) return;
-      else {
-        const selectedCardCount = this.deckCards.filter(
-          (card) => card.id === cardSelected.id
-        ).length;
-
-        if (this.getNumberOfCardById(cardSelected.id) <= selectedCardCount)
-          return;
-        if (selectedCardCount >= 3) {
-          return alert("Pas plus de 3 exemplaires par cartes");
-        }
-        this.sideDeckCards.push({ ...cardSelected });
-        this.sideDeckCards = this.sideDeckCards.sort(this.customCardSort);
-        localStorage.setItem("sideDeck", JSON.stringify(this.sideDeckCards));
+      const selectedCardCountDeck = this.deckCards.filter(
+        (card) => card.id === cardSelected.id
+      ).length;
+      const selectedCardCountSide = this.sideDeckCards.filter(
+        (card) => card.id === cardSelected.id
+      ).length;
+      const selectedCardCount = selectedCardCountDeck + selectedCardCountSide;
+      if (this.getNumberOfCardById(cardSelected.id) <= selectedCardCount)
+        return;
+      if (selectedCardCount >= 3) {
+        return alert("Pas plus de 3 exemplaires par cartes");
       }
+      this.sideDeckCards.push({ ...cardSelected });
+      this.sideDeckCards = this.sideDeckCards.sort(this.customCardSort);
+      localStorage.setItem("sideDeck", JSON.stringify(this.sideDeckCards));
     },
 
     removeCard(cardSelected) {
@@ -288,7 +288,7 @@ export default {
       if (index !== -1) {
         this.sideDeckCards.splice(index, 1);
         this.sideDeckCards = this.sideDeckCards.sort(this.customCardSort);
-        localStorage.setItem("sideDeck", JSON.stringify(this.deckCards));
+        localStorage.setItem("sideDeck", JSON.stringify(this.sideDeckCards));
       }
     },
 
