@@ -1,5 +1,5 @@
 <template>
-  <div class="modal">
+  <div class="modal"  @click="$emit('close')">
     <div class="modal-content">
       <span class="close" @click="$emit('close')">&times;</span>
       <div class="image-container">
