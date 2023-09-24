@@ -5,6 +5,10 @@
       <div class="card-image" :style="{'width': `10vw`, 'height': `${10*1.45}vw`}">
         <CardSmall :card="getBestCard(deck.deck)"/>
       </div>
+      <button @click="showDeckPreview(deck)">Voir le deck</button>
+      <CustomModal v-if="showDeck" @close="showDeck = false">
+        <DeckPreview class="deck-preview" :deck="shownDeck.deck" />
+      </CustomModal>
     </div>
   </div>
   
@@ -12,24 +16,40 @@
 
 <script>
 import CardSmall from '@/components/CardSmall.vue';
+import CustomModal from '@/components/CustomModal.vue';
+import DeckPreview from '@/components/DeckPreview.vue';
 import {prebuiltDecks, getCardById} from '@/API/database';
 import "vue-search-select/dist/VueSearchSelect.css"
 
 export default {
   name: 'PrebuiltDecks',
-  components: {CardSmall},
+  components: {CardSmall, CustomModal, DeckPreview},
   props: {
   },
+  data: () => ({
+    showDeck: false,
+    shownDeck: null,
+  }),
   computed: {
     getPrebuiltDecks() {
-      return prebuiltDecks;
+      const a = prebuiltDecks.map(d=>({
+        name: d.name, 
+        deck: d.deck.map(card=>{
+          return {...getCardById(card.id), count: card.count}
+      })
+        }));
+        console.log(a)
+        return a
     }
   },
   methods: {
+    showDeckPreview(deck) {
+      this.showDeck = true;
+      this.shownDeck = deck;
+    },
     getBestCard(deck) {
       return deck
-      .map(card=>getCardById(card.id))
-      .sort((a, b) => b.card_prices[0].cardmarket_price-a.card_prices[0].cardmarket_price)[1]
+      .sort((a, b) => b.card_prices[0].cardmarket_price-a.card_prices[0].cardmarket_price)[0]
       
     }
   }
@@ -38,6 +58,10 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.deck-preview {
+  overflow-y: scroll;
+  height: 80vh;
+}
 .decks-list {
   display: grid;
   grid-template-columns: repeat(8, 11vw);

@@ -4,7 +4,6 @@
         <span>Deck</span>
         <span>({{countDeck}})</span>
     </h1>
-    
     <h2>
         <span>Monstres</span>
         <span>({{countMonsters}})</span>
@@ -56,11 +55,11 @@
 <script>
 export default {
   props: {
-    deck: {},
+    deck: {default: []},
+    extraDeck: {default: []}
   },
   computed: {
     countExtra() {
-        console.log("aze", this.extra)
         return this.extra.reduce((a, b)=> a+b.count, 0);
     },
     countMonsters() {
@@ -76,7 +75,7 @@ export default {
         return this.deck.reduce((a, b)=> a+b.count, 0);
     },
     monsters() {
-        return this.deck.filter((card)=>["Normal Monster", "Effect Monster"].map((e)=>card.type.includes(e)).some(e=>e));
+        return this.deck.filter((card)=>card.type.includes("Monster"));
     },
     spells() {
         return this.deck.filter((card)=>card.type == "Spell Card");
@@ -85,7 +84,7 @@ export default {
         return this.deck.filter((card)=>card.type == "Trap Card");
     },
     extra() {
-        return this.deck.filter((card)=>["Fusion Monster"].includes(card.type));
+        return this.extraDeck;
     }
   },
   methods: {

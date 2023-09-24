@@ -46,7 +46,7 @@ function writeToFile(obj, fileName){
     
 }
 
-const cards = require("./database/dbCards.json").data;
+const cards = require("./database/dbCards.json");
 
 function convertResInFile(res) {
     const deck = res.cards.map((card) => {

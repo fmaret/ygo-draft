@@ -1,4 +1,5 @@
-export const cards = require("./database/dbCards.json").data;
+export const cards = require("./database/dbCards.json");
+
 export const sets = require("./database/dbSets.json");  
 export const prebuiltDecks = require("./database/prebuiltDecks.json");
 
