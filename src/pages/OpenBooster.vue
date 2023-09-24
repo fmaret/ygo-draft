@@ -24,7 +24,6 @@
       </template>
     </div>
     <button v-if="!boosterOpening && started" @click="openBooster">Suivant</button>
-    <button v-if="!started" @click="clearLocalStorage">Clear Local Storage</button>
   </div>
   <div v-if="previewedCard" class="preview-card" :style="{'width': `20vw`, 'height': `${20*1.45}vw`}">
     <CardSmall :card="previewedCard"/>
@@ -47,9 +46,6 @@ export default {
   methods: {
     previewCard(card) {
       this.previewedCard = card;
-    },
-    clearLocalStorage() {
-      localStorage.clear();
     },
     addBoosterCardsInBoostersContent() {
       const formattedBoosterCards = this.boosterCards.map((card) => {
