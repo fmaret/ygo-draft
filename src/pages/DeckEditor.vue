@@ -214,6 +214,7 @@ export default {
           return alert("Pas plus de 3 exemplaires par cartes");
         }
         this.extraDeckCards.push({ ...cardSelected });
+        this.extraDeckCards = this.extraDeckCards.sort(this.customCardSort);
         localStorage.setItem("ExtraDeck", JSON.stringify(this.extraDeckCards));
       } else {
         const selectedCardCount = this.deckCards.filter(
@@ -226,6 +227,7 @@ export default {
           return alert("Pas plus de 3 exemplaires par cartes");
         }
         this.deckCards.push({ ...cardSelected });
+        this.deckCards = this.deckCards.sort(this.customCardSort);
         localStorage.setItem("deck", JSON.stringify(this.deckCards));
       }
     },
@@ -237,6 +239,7 @@ export default {
         );
         if (index !== -1) {
           this.extraDeckCards.splice(index, 1);
+          this.extraDeckCards = this.extraDeckCards.sort(this.customCardSort);
           localStorage.setItem(
             "ExtraDeck",
             JSON.stringify(this.extraDeckCards)
@@ -248,6 +251,7 @@ export default {
         );
         if (index !== -1) {
           this.deckCards.splice(index, 1);
+          this.deckCards = this.deckCards.sort(this.customCardSort);
           localStorage.setItem("deck", JSON.stringify(this.deckCards));
         }
       }
