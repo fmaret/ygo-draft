@@ -49,7 +49,7 @@
             >
               <CardSmall
                 @mouseenter="showDescription(card)"
-                @contextmenu.prevent="removeCard(card)"
+                @contextmenu.prevent="removeSideCard(card)"
                 :card="card"
               />
             </div>
@@ -83,6 +83,7 @@
           >
             <CardSmall
               @mouseenter="showDescription(card)"
+              @contextmenu.prevent="addSideCard(card)"
               @click.left="addCard(card)"
               :card="card"
               :count="getNumberOfCardById(card.id)"
@@ -169,6 +170,11 @@ export default {
       this.extraDeckCards = JSON.parse(extraDeckJson);
     }
 
+    const sideDeckJson = localStorage.getItem("sideDeck");
+    if (sideDeckJson) {
+      this.sideDeckCards = JSON.parse(sideDeckJson);
+    }
+
     //Load cards draw in localstorage
     const cardsJson = localStorage.getItem("cards");
     if (cardsJson) {
@@ -232,6 +238,24 @@ export default {
       }
     },
 
+    addSideCard(cardSelected) {
+      if (this.typeExtraDeck.includes(cardSelected.frameType)) return;
+      else {
+        const selectedCardCount = this.deckCards.filter(
+          (card) => card.id === cardSelected.id
+        ).length;
+
+        if (this.getNumberOfCardById(cardSelected.id) <= selectedCardCount)
+          return;
+        if (selectedCardCount >= 3) {
+          return alert("Pas plus de 3 exemplaires par cartes");
+        }
+        this.sideDeckCards.push({ ...cardSelected });
+        this.sideDeckCards = this.sideDeckCards.sort(this.customCardSort);
+        localStorage.setItem("sideDeck", JSON.stringify(this.sideDeckCards));
+      }
+    },
+
     removeCard(cardSelected) {
       if (this.typeExtraDeck.includes(cardSelected.frameType)) {
         const index = this.extraDeckCards.findIndex(
@@ -254,6 +278,17 @@ export default {
           this.deckCards = this.deckCards.sort(this.customCardSort);
           localStorage.setItem("deck", JSON.stringify(this.deckCards));
         }
+      }
+    },
+
+    removeSideCard(cardSelected) {
+      const index = this.sideDeckCards.findIndex(
+        (card) => card.id === cardSelected.id
+      );
+      if (index !== -1) {
+        this.sideDeckCards.splice(index, 1);
+        this.sideDeckCards = this.sideDeckCards.sort(this.customCardSort);
+        localStorage.setItem("sideDeck", JSON.stringify(this.deckCards));
       }
     },
 
@@ -286,12 +321,16 @@ export default {
 
     generateYDK() {
       const deckData = this.deckCards;
-      const ExtraDeckData = this.extraDeckCards;
+      const extraDeckData = this.extraDeckCards;
+      const sideDeckData = this.sideDeckCards;
       const mainDeckString = deckData.map((card) => `${card.id}`).join("\n");
-      const extraDeckString = ExtraDeckData
-        ? ExtraDeckData.map((card) => `${card.id}`).join("\n")
+      const extraDeckString = extraDeckData
+        ? extraDeckData.map((card) => `${card.id}`).join("\n")
         : "";
-      return `#created by Steven et Florent\n#main\n${mainDeckString}\n#extra\n${extraDeckString}\n!side`;
+      const sideDeckString = sideDeckData
+        ? sideDeckData.map((card) => `${card.id}`).join("\n")
+        : "";
+      return `#created by Steven et Florent\n#main\n${mainDeckString}\n#extra\n${extraDeckString}\n!side\n${sideDeckString}\n`;
     },
 
     customCardSort(a, b) {
@@ -333,23 +372,26 @@ export default {
 .left-column,
 .right-column {
   flex: 1;
-  background-color: #f0f0f0; /* Couleur de fond des colonnes de gauche et de droite */
+  background-color: #f0f0f0;
 }
 
 .middle-column {
   flex: 2;
-  background-color: #e0e0e0; /* Couleur de fond de la colonne du milieu */
+  background-color: #e0e0e0;
 }
 
 .first-row {
-  flex: 2; /* La première ligne de la colonne du milieu est plus grande */
-  background-color: #c0c0c0; /* Couleur de fond de la première ligne */
+  flex: 2;
+  background-color: #a9a9a9;
 }
 
-.second-row,
+.second-row {
+  flex: 1;
+  background-color: #c2c2c2;
+}
 .third-row {
-  flex: 1; /* Les lignes 2 et 3 de la colonne du milieu ont la même taille */
-  background-color: #d0d0d0; /* Couleur de fond des lignes 2 et 3 */
+  flex: 1;
+  background-color: #d0d0d0;
 }
 
 .image-grid {

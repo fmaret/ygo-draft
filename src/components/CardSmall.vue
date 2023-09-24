@@ -109,7 +109,6 @@ export default {
       this.$refs.cardTitle.style.fontSize = this.$refs.cardBody.offsetWidth * size / width20vw + "px";
       this.$refs.cardTitle.style.letterSpacing = this.$refs.cardBody.offsetWidth * defaultLetterSpacing / width20vw + "px";
       if (!this.$refs.cardTitleTextOnly) return;
-      console.log(this.$refs.cardTitleTextOnly.style.transform)
       const lettersRef = 40;
       const marginLeftRef = 40;
       const nbOfLetters = this.card.name.length;
