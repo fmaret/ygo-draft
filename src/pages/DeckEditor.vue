@@ -260,7 +260,7 @@ export default {
       if (this.deckCards.length > 60) {
         return alert("Il vous faut au plus 60 cartes !");
       }
-      const contenuYDK = this.genereYDK();
+      const contenuYDK = this.generateYDK();
       const blob = new Blob([contenuYDK], { type: "text/plain" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -277,17 +277,17 @@ export default {
       if (this.deckCards.length > 60) {
         return alert("Il vous faut au plus 60 cartes !");
       }
-      navigator.clipboard.writeText(this.genereYDK());
+      navigator.clipboard.writeText(this.generateYDK());
     },
 
-    genereYDK() {
+    generateYDK() {
       const deckData = this.deckCards;
       const ExtraDeckData = this.extraDeckCards;
-      return `#created by Steven et Florent\n#main\n${deckData
-        .map((card) => `${card.id}`)
-        .join("\n")}\n#extra\n${ExtraDeckData.map((card) => `${card.id}`).join(
-        "\n"
-      )}\n!side`;
+      const mainDeckString = deckData.map((card) => `${card.id}`).join("\n");
+      const extraDeckString = ExtraDeckData
+        ? ExtraDeckData.map((card) => `${card.id}`).join("\n")
+        : "";
+      return `#created by Steven et Florent\n#main\n${mainDeckString}\n#extra\n${extraDeckString}\n!side`;
     },
 
     customCardSort(a, b) {
