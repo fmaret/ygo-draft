@@ -1,28 +1,46 @@
 const puppeteer = require('puppeteer');
 
 async function exportOtkExpertDeckFromUrl(url) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: "new"});
     const page = await browser.newPage();
     await page.goto(url);
     const res = await page.evaluate(() => {
         // let page = document.querySelector('.demi_page');
         // let cards = Array.from(page.querySelectorAll('.tabcard'));
-        let aTags = Array.from(document.querySelectorAll('.tabcard a'));
-        const cards = aTags.map((a)=>{
-            const list = a ? a.getAttribute('href').split("/") : null;
-            const labelSplit = a.querySelector("span").textContent.split(" ");
-            const count = parseInt(labelSplit[0]);
-            const name = labelSplit.slice(1, labelSplit.length).join(" ");
-            return {
-                code: list[list.length-2],
-                name: name,
-                count: count
+        const result = {};
+        const theads = document.querySelectorAll('thead');
+        const categories = {
+            "Monstres": "monsters",
+            "Magies": "spells",
+            "Pièges": "traps",
+            "Extra": "extra",
+            "Side": "side"
+        }
+        for (const category of Object.keys(categories)) {
+            for (const thead of theads) {
+                if (thead.textContent.includes(category)) {
+                    const tbody = thead.nextElementSibling;
+                    if (tbody && tbody.tagName === 'TBODY') {
+                        const cards = Array.from(tbody.querySelectorAll(".tabcard a")).map((a)=>{
+                            const list = a ? a.getAttribute('href').split("/") : null;
+                            const labelSplit = a.querySelector("span").textContent.split(" ");
+                            const count = parseInt(labelSplit[0]);
+                            const name = labelSplit.slice(1, labelSplit.length).join(" ");
+                            return {
+                                code: list[list.length-2],
+                                name: name,
+                                count: count
+                            }
+                        });
+                        result[categories[category]] = cards;
+                    }
+                }
             }
-        });
+        }        
         const deckName = document.querySelector("h1").textContent;
         return {
             name: deckName,
-            cards: cards
+            cards: result
         }
     });
     browser.close();
@@ -49,27 +67,39 @@ function writeToFile(obj, fileName){
 const cards = require("./database/dbCards.json");
 
 function convertResInFile(res) {
-    const deck = res.cards.map((card) => {
-        const cardName = card.name;
-        let cardCode = card.code;
-        let res = null;
-        try {
-            cardCode = cardCode.split("-")[0] + "-EN" + "0".repeat(3-cardCode.split("-")[1].length) + cardCode.split("-")[1];
-            res = cards.filter((c)=> {
-                return c?.card_sets?.some((set)=>set.set_code == cardCode);
-            })[0]
-        } catch(error) {
-            res = null;
-        }
-        if(!res) {
-            res = cards.filter((c)=> c?.name == cardName)[0];
-        }
-        return {
-            id: res?.id,
-            count: card?.count,
-            name: card?.name
-        }
-    })
+    const categories = {
+        "Monstres": "monsters",
+        "Magies": "spells",
+        "Pièges": "traps",
+        "Extra": "extra",
+        "Side": "side"
+    }
+    const deck = {}
+    for (const category of Object.keys(categories)) {
+        const cardsOfCategory = res.cards[categories[category]]?.map((card) => {
+            const cardName = card.name;
+            let cardCode = card.code;
+            let res = null;
+            try {
+                cardCode = cardCode.split("-")[0] + "-EN" + "0".repeat(3-cardCode.split("-")[1].length) + cardCode.split("-")[1];
+                res = cards.filter((c)=> {
+                    return c?.card_sets?.some((set)=>set.set_code == cardCode);
+                })[0]
+            } catch(error) {
+                res = null;
+            }
+            if(!res) {
+                res = cards.filter((c)=> c?.name == cardName)[0];
+            }
+            return {
+                id: res?.id,
+                count: card?.count,
+                name: card?.name
+            }
+        })
+        deck[categories[category]] = cardsOfCategory;
+    }
+    
     writeToFile({
         name: res.name,
         deck,
@@ -79,7 +109,7 @@ function convertResInFile(res) {
 
 async function getDecksUrls() {
     const url = "https://www.otk-expert.fr/yugioh/decks/?dpage=1&action=decks-populaires"
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({headless: "new"});
     const page = await browser.newPage();
     await page.goto(url);
     const res = await page.evaluate(() => {
