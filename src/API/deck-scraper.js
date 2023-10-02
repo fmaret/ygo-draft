@@ -7,18 +7,16 @@ async function exportOtkExpertDeckFromUrl(url) {
     const res = await page.evaluate(() => {
         // let page = document.querySelector('.demi_page');
         // let cards = Array.from(page.querySelectorAll('.tabcard'));
-        const result = {};
+        let result = {};
         const theads = document.querySelectorAll('thead');
         const categories = {
-            "Monstres": "monsters",
-            "Magies": "spells",
-            "Pièges": "traps",
-            "Extra": "extra",
-            "Side": "side"
+            deck: ["Monstres", "Magies", "Pièges"] ,
+            extraDeck: ["Extra"],
+            sideDeck: ["Side"]
         }
         for (const category of Object.keys(categories)) {
             for (const thead of theads) {
-                if (thead.textContent.includes(category)) {
+                if (categories[category].some((e) => thead.textContent.includes(e))) {
                     const tbody = thead.nextElementSibling;
                     if (tbody && tbody.tagName === 'TBODY') {
                         const cards = Array.from(tbody.querySelectorAll(".tabcard a")).map((a)=>{
@@ -32,7 +30,9 @@ async function exportOtkExpertDeckFromUrl(url) {
                                 count: count
                             }
                         });
-                        result[categories[category]] = cards;
+                        if (!result[category]) result[category] = cards;
+                        else result[category] = [...result[category], ...cards];
+                        
                     }
                 }
             }
@@ -67,16 +67,9 @@ function writeToFile(obj, fileName){
 const cards = require("./database/dbCards.json");
 
 function convertResInFile(res) {
-    const categories = {
-        "Monstres": "monsters",
-        "Magies": "spells",
-        "Pièges": "traps",
-        "Extra": "extra",
-        "Side": "side"
-    }
     const deck = {}
-    for (const category of Object.keys(categories)) {
-        const cardsOfCategory = res.cards[categories[category]]?.map((card) => {
+    for (const category of Object.keys(res.cards)) {
+        const cardsOfCategory = res.cards[category]?.map((card) => {
             const cardName = card.name;
             let cardCode = card.code;
             let res = null;
@@ -97,12 +90,12 @@ function convertResInFile(res) {
                 name: card?.name
             }
         })
-        deck[categories[category]] = cardsOfCategory;
+        deck[category] = cardsOfCategory;
     }
     
     writeToFile({
         name: res.name,
-        deck,
+        ...deck,
     }, "prebuiltDecks.json")
 }
 

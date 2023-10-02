@@ -8,7 +8,6 @@ let cards = cardsFr;
 Object.keys(cardsEn).forEach((cardIndex)=>{
     const card = cardsEn[cardIndex];
     if (!cards.some(c=>c.id==card.id)) {
-        console.log(card.name)
         cards.push(card);
     }
 })

@@ -7,7 +7,7 @@
       </div>
       <button @click="showDeckPreview(deck)">Voir le deck</button>
       <CustomModal v-if="showDeck" @close="showDeck = false">
-        <DeckPreview class="deck-preview" :deck="shownDeck.deck" />
+        <DeckPreview class="deck-preview" :deck="shownDeck.deck" :extraDeck="shownDeck.extraDeck" />
       </CustomModal>
     </div>
   </div>
@@ -36,9 +36,11 @@ export default {
         name: d.name, 
         deck: d.deck.map(card=>{
           return {...getCardById(card.id), count: card.count}
-      })
+        }),
+        extraDeck: d.extraDeck?.map(card=>{
+          return {...getCardById(card.id), count: card.count}
+        }),
         }));
-        console.log(a)
         return a
     }
   },

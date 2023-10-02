@@ -35,10 +35,8 @@ export default {
     generateChoice() {
       let allCards = [];
       this.sets.forEach((set)=> {
-        console.log("aze", set.value)
         allCards = [...allCards, ...getCardsOfSet(set.value)];
       }) 
-      console.log("all", allCards)
       this.cards = Array(3).fill(null).map(()=> getRandomCardInList(allCards, "Rare"));
     },
     selectCard(card){
@@ -50,7 +48,6 @@ export default {
       if (index == -1) this.deck.push({...card, count: 1});
       else this.deck[index].count += 1;
       this.$emit("deckUpdated", this.deck);
-      console.log("coucou", this.deck)
       this.generateChoice();
     }
   }

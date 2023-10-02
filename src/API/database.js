@@ -153,7 +153,6 @@ export function getCardsOfSet(setCode) {
 
 export function getRandomCard() {
   const randomIndex = Math.floor(Math.random() * cards.length);
-  console.log("a", cards[randomIndex]);
   return cards[randomIndex];
 }
 
@@ -199,10 +198,6 @@ export function getRandomCardInList(
 
   // betterRarities only works for common cards (for 6th card)
 
-  console.log("seuil commune", probCommune6th)
-  console.log("seuil super", probCommune6th + probSuperRare)
-  console.log("seuil ultra", probCommune6th + probSuperRare + probUltraRare)
-  console.log("r", r)
   if (r <= probCommune6th) {
     return pickCommonCard();
   } else if (r <= probCommune6th + probSuperRare) {
