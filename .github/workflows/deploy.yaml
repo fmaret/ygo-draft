@@ -1,0 +1,25 @@
+name: Build & Deploy Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t registry.fmaret.duckdns.org/ygo-draft:latest -f Dockerfile .
+
+      - name: Login to private registry
+        run: echo ${{ secrets.REGISTRY_PASSWORD }} | docker login registry.fmaret.duckdns.org -u ${{ secrets.REGISTRY_USERNAME }} --password-stdin
+
+      - name: Push Docker image
+        run: docker push registry.fmaret.duckdns.org/ygo-draft:latest
